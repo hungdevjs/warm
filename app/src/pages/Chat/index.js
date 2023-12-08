@@ -2,12 +2,12 @@ import { Box } from '@mui/material';
 
 import Layout from '../../components/Layout';
 
-const Home = () => {
+const Chat = () => {
   return (
     <Layout>
-      <Box>Home</Box>
+      <Box>Chat</Box>
     </Layout>
   );
 };
 
-export default Home;
+export default Chat;
