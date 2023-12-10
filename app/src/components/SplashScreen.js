@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 
-const Loading = () => {
+const SplashScreen = () => {
   return (
     <Box
       height="100vh"
@@ -27,4 +27,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default SplashScreen;

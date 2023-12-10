@@ -19,7 +19,7 @@ const BottomNavs = () => {
   const isActive = (path) => path === pathname;
 
   return (
-    <Box display="flex" justifyContent="space-between" p={1}>
+    <Box display="flex" justifyContent="space-between" p={1} bgcolor="#fa5f60">
       {navs.map((nav) => (
         <Box
           key={nav.text}
@@ -31,7 +31,7 @@ const BottomNavs = () => {
           px={2}
           py={0.5}
           borderRadius={2}
-          bgcolor={isActive(nav.path) ? alpha('#fa5f60', 0.1) : 'transparent'}
+          bgcolor={isActive(nav.path) ? alpha('#fff', 0.1) : 'transparent'}
           sx={{ cursor: 'pointer' }}
           onClick={() => navigate(nav.path)}
         >
@@ -39,7 +39,7 @@ const BottomNavs = () => {
           <Typography
             fontSize={10}
             fontWeight={600}
-            color={isActive(nav.path) ? 'coral' : 'grey'}
+            color={isActive(nav.path) ? 'white' : 'lightgrey'}
             align="center"
           >
             {nav.text}

@@ -3,11 +3,7 @@ import { Box } from '@mui/material';
 import Layout from '../../components/Layout';
 
 const Menu = () => {
-  return (
-    <Layout>
-      <Box>Menu</Box>
-    </Layout>
-  );
+  return <Box>Menu</Box>;
 };
 
 export default Menu;
