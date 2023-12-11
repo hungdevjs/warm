@@ -1,19 +1,50 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, alpha } from '@mui/material';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
 import useProposalStore from '../../stores/proposal.store';
 import useCoupleStore from '../../stores/couple.store';
+import {
+  acceptProposal,
+  declineProposal,
+} from '../../services/firebase.service';
 
 const PendingProposals = () => {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const pendingProposals = useProposalStore((state) => state.pendingProposals);
   const couple = useCoupleStore((state) => state.couple);
   const coupleInitialized = useCoupleStore((state) => state.initialized);
   const proposalInitialized = useProposalStore((state) => state.initialized);
+  const [loading, setLoading] = useState(false);
+
+  const accept = async (proposalId) => {
+    setLoading(true);
+    try {
+      await acceptProposal({ proposalId });
+      enqueueSnackbar('Accepted proposal', { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+    setLoading(false);
+  };
+
+  const decline = async (proposalId) => {
+    setLoading(true);
+    try {
+      await declineProposal({ proposalId });
+      enqueueSnackbar('Declined proposal', { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (coupleInitialized && proposalInitialized) {
@@ -85,6 +116,8 @@ const PendingProposals = () => {
                           color="success"
                           startIcon={<CheckRoundedIcon />}
                           sx={{ flex: 1 }}
+                          onClick={() => accept(proposal.id)}
+                          disabled={loading}
                         >
                           Accept
                         </Button>
@@ -94,6 +127,8 @@ const PendingProposals = () => {
                           color="error"
                           startIcon={<CloseRoundedIcon />}
                           sx={{ flex: 1 }}
+                          onClick={() => decline(proposal.id)}
+                          disabled={loading}
                         >
                           Decline
                         </Button>

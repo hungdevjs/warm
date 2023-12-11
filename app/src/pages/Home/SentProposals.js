@@ -1,18 +1,34 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, alpha } from '@mui/material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
 import useProposalStore from '../../stores/proposal.store';
 import useCoupleStore from '../../stores/couple.store';
+import { removeProposal } from '../../services/firebase.service';
 
 const SentProposals = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const sentProposals = useProposalStore((state) => state.sentProposals);
   const couple = useCoupleStore((state) => state.couple);
   const coupleInitialized = useCoupleStore((state) => state.initialized);
   const proposalInitialized = useProposalStore((state) => state.initialized);
+  const [loading, setLoading] = useState(false);
+
+  const remove = async (proposalId) => {
+    setLoading(true);
+    try {
+      await removeProposal({ proposalId });
+      enqueueSnackbar('Removed proposal', { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     if (coupleInitialized && proposalInitialized) {
@@ -83,6 +99,8 @@ const SentProposals = () => {
                           color="error"
                           startIcon={<DeleteRoundedIcon />}
                           sx={{ flex: 1 }}
+                          onClick={() => remove(proposal.id)}
+                          disabled={loading}
                         >
                           Delete proposal
                         </Button>

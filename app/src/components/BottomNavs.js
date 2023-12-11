@@ -19,7 +19,13 @@ const BottomNavs = () => {
   const isActive = (path) => path === pathname || pathname.includes(path);
 
   return (
-    <Box display="flex" justifyContent="space-between" p={1} bgcolor="#fa5f60">
+    <Box
+      height="80px"
+      display="flex"
+      justifyContent="space-between"
+      p={1}
+      bgcolor="#fa5f60"
+    >
       {navs.map((nav) => (
         <Box
           key={nav.text}
@@ -27,6 +33,7 @@ const BottomNavs = () => {
           display="flex"
           flexDirection="column"
           alignItems="center"
+          justifyContent="center"
           gap={0.5}
           px={2}
           py={0.5}

@@ -16,9 +16,7 @@ const useProposal = () => {
   const [loaded, setLoaded] = useState([false, false]);
   const user = useUserStore((state) => state.user);
   const setInitialized = useProposalStore((state) => state.setInitialized);
-  const sentProposals = useProposalStore((state) => state.sentProposals);
   const setSentProposals = useProposalStore((state) => state.setSentProposals);
-  const pendingProposals = useProposalStore((state) => state.pendingProposals);
   const setPendingProposals = useProposalStore(
     (state) => state.setPendingProposals
   );

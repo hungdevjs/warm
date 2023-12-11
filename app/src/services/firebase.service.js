@@ -23,3 +23,12 @@ export const searchUser = async (search) => {
 
 export const sendProposal = (data) =>
   httpsCallable(functions, 'sendProposal')(data);
+
+export const removeProposal = (data) =>
+  httpsCallable(functions, 'removeProposal')(data);
+
+export const acceptProposal = (data) =>
+  httpsCallable(functions, 'acceptProposal')(data);
+
+export const declineProposal = (data) =>
+  httpsCallable(functions, 'declineProposal')(data);

@@ -13,6 +13,8 @@ const Propose = () => {
   const { enqueueSnackbar } = useSnackbar();
   const couple = useCoupleStore((state) => state.couple);
   const coupleInitialized = useCoupleStore((state) => state.initialized);
+  const proposalInitialized = useProposalStore((state) => state.initialized);
+  const sentProposals = useProposalStore((state) => state.sentProposals);
   const pendingProposals = useProposalStore((state) => state.pendingProposals);
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -25,6 +27,14 @@ const Propose = () => {
       }
     }
   }, [coupleInitialized, couple]);
+
+  useEffect(() => {
+    if (proposalInitialized) {
+      if (!!sentProposals.length) {
+        navigate('/home/sent-proposals');
+      }
+    }
+  }, [proposalInitialized, sentProposals]);
 
   const submitSearch = async () => {
     setLoading(true);
@@ -43,6 +53,7 @@ const Propose = () => {
     setLoading(true);
     try {
       await sendProposal({ receiverId: partner.id });
+      enqueueSnackbar('Sent proposal', { variant: 'success' });
     } catch (err) {
       console.error(err);
       enqueueSnackbar(err.message, { variant: 'error' });
