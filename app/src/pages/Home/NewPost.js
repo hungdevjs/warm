@@ -36,7 +36,7 @@ const NewPost = () => {
   };
 
   return (
-    <Box height="100%" display="flex" flexDirection="column">
+    <Box minHeight="100%" bgcolor="white" display="flex" flexDirection="column">
       <Box p={2} display="flex" alignItems="center" bgcolor="#fa5f60">
         <IconButton onClick={() => navigate('/home/timeline')}>
           <CloseRoundedIcon sx={{ color: 'white' }} />

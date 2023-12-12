@@ -25,7 +25,7 @@ const Header = () => {
                 <SearchRoundedIcon sx={{ color: '#f8f8f8' }} />
               </InputAdornment>
             ),
-            sx: { borderRadius: 6, color: 'white', borderColor: 'white' },
+            sx: { borderRadius: 6, color: 'white' },
           }}
           sx={{
             '& label.Mui-focused': {

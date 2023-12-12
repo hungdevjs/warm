@@ -8,6 +8,7 @@ import Timeline from '../pages/Home/Timeline';
 import Notes from '../pages/Home/Notes';
 import Todos from '../pages/Home/Todos';
 import NewPost from '../pages/Home/NewPost';
+import Post from '../pages/Home/Post';
 
 const HomeRoute = () => {
   return (
@@ -20,6 +21,7 @@ const HomeRoute = () => {
       <Route path="/notes" element={<Notes />} />
       <Route path="/todos" element={<Todos />} />
       <Route path="/posts" element={<NewPost />} />
+      <Route path="/posts/:id" element={<Post />} />
       <Route path="*" element={<Navigate to="/home" replace />} />
     </Routes>
   );

@@ -31,7 +31,9 @@ const useTimeline = () => {
           ...item.data(),
           creator: couple.users[item.data().creatorId],
         }));
-        setPosts(docs);
+        const pinnedPosts = docs.filter((post) => post.isPinned);
+        const notPinnedPosts = docs.filter((post) => !post.isPinned);
+        setPosts([...pinnedPosts, ...notPinnedPosts]);
       });
     } else {
       setPosts([]);

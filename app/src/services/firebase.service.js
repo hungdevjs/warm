@@ -35,3 +35,6 @@ export const declineProposal = (data) =>
 
 export const createNewPost = (data) =>
   httpsCallable(functions, 'createNewPost')(data);
+
+export const createComment = (data) =>
+  httpsCallable(functions, 'createComment')(data);

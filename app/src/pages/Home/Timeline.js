@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Typography, IconButton } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
 import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import PushPinIcon from '@mui/icons-material/PushPin';
 import moment from 'moment';
 import parse from 'html-react-parser';
 
@@ -43,11 +44,12 @@ const Timeline = () => {
               How do you feel today?
             </Typography>
           </Box>
-          <IconButton>
+          {/* TODO: implement upload image later */}
+          {/* <IconButton>
             <ImageIcon
               sx={{ cursor: 'pointer', fontSize: '32px', color: '#fa5f60' }}
             />
-          </IconButton>
+          </IconButton> */}
         </Box>
         {posts.map((post) => (
           <Box
@@ -76,9 +78,12 @@ const Timeline = () => {
                 <img src={post.creator.avatarURL} alt="avatar" />
               </Box>
               <Box flex={1}>
-                <Typography fontWeight={600}>
-                  {post.creator.username}
-                </Typography>
+                <Box display="flex" alignItems="center" gap={0.5}>
+                  <Typography fontWeight={600}>
+                    {post.creator.username}
+                  </Typography>
+                  {post.isPinned && <PushPinIcon sx={{ color: '#fa5f60' }} />}
+                </Box>
                 <Typography fontSize={12}>
                   {moment(post.createdAt.toDate()).format('DD/MM/YYYY HH:mm')}
                 </Typography>
@@ -96,7 +101,7 @@ const Timeline = () => {
                   textDecoration: 'underline',
                   textUnderlineOffset: '2px',
                 }}
-                onClick={() => navigate(`/home/posts/${post.id}/comments`)}
+                onClick={() => navigate(`/home/posts/${post.id}`)}
               >
                 {post.numberOfComments} comments
               </Typography>
