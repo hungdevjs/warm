@@ -7,6 +7,7 @@ const {
   acceptProposal,
   declineProposal,
 } = require('./callables/proposals');
+const { createNewPost } = require('./callables/posts');
 
 admin.initializeApp();
 
@@ -15,3 +16,4 @@ exports.sendProposal = sendProposal;
 exports.removeProposal = removeProposal;
 exports.acceptProposal = acceptProposal;
 exports.declineProposal = declineProposal;
+exports.createNewPost = createNewPost;

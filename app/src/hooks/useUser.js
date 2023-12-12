@@ -4,25 +4,30 @@ import { onSnapshot, doc } from 'firebase/firestore';
 import { firestore } from '../configs/firebase.config';
 import useUserStore from '../stores/user.store';
 
-const useUser = (uid) => {
+const useUser = (authInitialized, uid) => {
+  const setInitialized = useUserStore((state) => state.setInitialized);
   const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     let unsubscribe;
-    if (uid) {
-      unsubscribe = onSnapshot(doc(firestore, 'users', uid), (snapshot) => {
-        if (snapshot.exists()) {
-          setUser({ id: snapshot.id, ...snapshot.data() });
-        } else {
-          setUser(null);
-        }
-      });
-    } else {
-      setUser(null);
+    if (authInitialized) {
+      if (uid) {
+        unsubscribe = onSnapshot(doc(firestore, 'users', uid), (snapshot) => {
+          if (snapshot.exists()) {
+            setUser({ id: snapshot.id, ...snapshot.data() });
+          } else {
+            setUser(null);
+          }
+          setInitialized(true);
+        });
+      } else {
+        setUser(null);
+        setInitialized(true);
+      }
     }
 
     return () => unsubscribe?.();
-  }, [uid]);
+  }, [uid, authInitialized]);
 };
 
 export default useUser;

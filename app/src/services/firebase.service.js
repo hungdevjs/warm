@@ -32,3 +32,6 @@ export const acceptProposal = (data) =>
 
 export const declineProposal = (data) =>
   httpsCallable(functions, 'declineProposal')(data);
+
+export const createNewPost = (data) =>
+  httpsCallable(functions, 'createNewPost')(data);

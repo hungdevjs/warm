@@ -6,14 +6,17 @@ import useAuth from '../hooks/useAuth';
 import useUser from '../hooks/useUser';
 import useCouple from '../hooks/useCouple';
 import useProposal from '../hooks/useProposal';
+import useUserStore from '../stores/user.store';
 
 const Navigations = () => {
-  const { initialized, user } = useAuth();
-  useUser(user?.uid);
+  const user = useUserStore((state) => state.user);
+  const initialized = useUserStore((state) => state.initialized);
+  const { initialized: authInitialized, user: authUser } = useAuth();
+  useUser(authInitialized, authUser?.uid);
   useCouple();
   useProposal();
 
-  if (!initialized) return <SplashScreen />;
+  if (!initialized || !authInitialized) return <SplashScreen />;
 
   if (!user) return <AuthRoutes />;
 

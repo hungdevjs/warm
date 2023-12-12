@@ -23,7 +23,6 @@ const useProposal = () => {
 
   useEffect(() => {
     let unsubscribe1, unsubscribe2;
-    console.log({ user });
     if (user) {
       const query1 = query(
         collection(firestore, 'proposals'),
@@ -114,8 +113,6 @@ const useProposal = () => {
       setInitialized(true);
     }
   }, [loaded]);
-
-  console.log(loaded);
 };
 
 export default useProposal;

@@ -9,7 +9,7 @@ const MainComponent = ({ children }) => {
   const coupleInitialized = useCoupleStore((state) => state.initialized);
   const proposalInitizlied = useProposalStore((state) => state.initialized);
 
-  if (!user || !coupleInitialized || !proposalInitizlied)
+  if (!coupleInitialized || !proposalInitizlied)
     return (
       <Box
         height="100%"

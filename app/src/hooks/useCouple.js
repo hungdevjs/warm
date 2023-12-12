@@ -1,5 +1,13 @@
 import { useEffect } from 'react';
-import { onSnapshot, doc } from 'firebase/firestore';
+import {
+  onSnapshot,
+  doc,
+  query,
+  collection,
+  where,
+  documentId,
+  getDocs,
+} from 'firebase/firestore';
 
 import { firestore } from '../configs/firebase.config';
 import useUserStore from '../stores/user.store';
@@ -16,9 +24,18 @@ const useCouple = () => {
       if (user.coupleId) {
         unsubscribe = onSnapshot(
           doc(firestore, 'couples', user?.coupleId),
-          (snapshot) => {
+          async (snapshot) => {
             if (snapshot.exists()) {
-              setCouple({ id: snapshot.id, ...snapshot.data() });
+              const q = query(
+                collection(firestore, 'users'),
+                where(documentId(), 'in', snapshot.data().users)
+              );
+              const userSnapshot = await getDocs(q);
+              const users = userSnapshot.docs.reduce((result, item) => {
+                result[item.id] = { id: item.id, ...item.data() };
+                return result;
+              }, {});
+              setCouple({ id: snapshot.id, ...snapshot.data(), users });
             } else {
               setCouple(null);
             }
