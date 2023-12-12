@@ -56,16 +56,18 @@ const Timeline = () => {
             <img src={user.avatarURL} alt="avatar" />
           </Box>
           <Box flex={1} onClick={() => navigate('/home/posts')}>
-            <Typography fontSize="18px" color="#555">
-              How do you feel today?
+            <Typography fontSize={14} color="#888">
+              Today is{' '}
+              {moment().diff(moment(couple.startDate.toDate()), 'days')} days
+              since your first day. How do you feel?
             </Typography>
           </Box>
           {/* TODO: implement upload image later */}
-          {/* <IconButton>
+          <IconButton>
             <ImageIcon
               sx={{ cursor: 'pointer', fontSize: '32px', color: '#fa5f60' }}
             />
-          </IconButton> */}
+          </IconButton>
         </Box>
         {posts.map((post) => (
           <Box

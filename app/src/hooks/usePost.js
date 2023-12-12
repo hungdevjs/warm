@@ -57,7 +57,7 @@ const usePost = (id) => {
     return () => unsubscribe?.();
   }, [couple?.id, id]);
 
-  return { post, comments };
+  return { post, setPost, comments };
 };
 
 export default usePost;
