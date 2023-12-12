@@ -1,21 +1,37 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, IconButton } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded';
+import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
 import PushPinIcon from '@mui/icons-material/PushPin';
 import moment from 'moment';
 import parse from 'html-react-parser';
+import { useSnackbar } from 'notistack';
 
 import Main from './components/Main';
 import useUserStore from '../../stores/user.store';
 import useCoupleStore from '../../stores/couple.store';
 import useTimeline from '../../hooks/useTimeline';
+import { togglePinnedStatus } from '../../services/firebase.service';
 
 const Timeline = () => {
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
   const user = useUserStore((state) => state.user);
   const couple = useCoupleStore((state) => state.couple);
   const { posts } = useTimeline();
+  const [loadingIds, setLoadingIds] = useState([]);
+
+  const togglePinned = async (postId) => {
+    if (loadingIds.includes(postId)) return;
+    setLoadingIds((prev) => [...prev, postId]);
+    try {
+      await togglePinnedStatus({ postId });
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+    setLoadingIds((prev) => prev.filter((item) => item !== postId));
+  };
 
   if (!couple) return null;
 
@@ -82,14 +98,20 @@ const Timeline = () => {
                   <Typography fontWeight={600}>
                     {post.creator.username}
                   </Typography>
-                  {post.isPinned && <PushPinIcon sx={{ color: '#fa5f60' }} />}
                 </Box>
                 <Typography fontSize={12}>
                   {moment(post.createdAt.toDate()).format('DD/MM/YYYY HH:mm')}
                 </Typography>
               </Box>
-              <IconButton sx={{ alignSelf: 'flex-start' }}>
-                <MoreHorizRoundedIcon />
+              <IconButton
+                sx={{ alignSelf: 'flex-start' }}
+                onClick={() => togglePinned(post.id)}
+              >
+                {post.isPinned ? (
+                  <PushPinIcon sx={{ color: '#fa5f60' }} />
+                ) : (
+                  <PushPinOutlinedIcon />
+                )}
               </IconButton>
             </Box>
             <Box>{parse(post.text)}</Box>

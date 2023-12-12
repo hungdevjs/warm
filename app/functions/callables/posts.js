@@ -92,7 +92,45 @@ const createComment = functions.https.onCall(async (data, context) => {
   }
 });
 
+const togglePinnedStatus = functions.https.onCall(async (data, context) => {
+  functions.logger.info('toggle pinned status', data, context);
+
+  try {
+    const { uid } = context?.auth || {};
+    if (!uid) throw new Error('Bad request');
+
+    const userSnapshot = await admin
+      .firestore()
+      .collection('users')
+      .doc(uid)
+      .get();
+    const { coupleId } = userSnapshot.data();
+    if (!coupleId) throw new Error('You have not had a partner');
+
+    const { postId } = data;
+
+    const postSnapshot = await admin
+      .firestore()
+      .collection('couples')
+      .doc(coupleId)
+      .collection('posts')
+      .doc(postId)
+      .get();
+    if (!postSnapshot.exists) throw new Error('Post not found');
+
+    await postSnapshot.ref.update({
+      isPinned: !postSnapshot.data().isPinned,
+    });
+
+    return { status: 'OK' };
+  } catch (err) {
+    functions.logger.error('error in toggling pinned status', data, context);
+    throw new functions.https.HttpsError('bad-request', err.message, err);
+  }
+});
+
 module.exports = {
   createNewPost,
   createComment,
+  togglePinnedStatus,
 };

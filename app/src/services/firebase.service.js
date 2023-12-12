@@ -38,3 +38,6 @@ export const createNewPost = (data) =>
 
 export const createComment = (data) =>
   httpsCallable(functions, 'createComment')(data);
+
+export const togglePinnedStatus = (data) =>
+  httpsCallable(functions, 'togglePinnedStatus')(data);

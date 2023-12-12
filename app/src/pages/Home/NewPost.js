@@ -36,7 +36,7 @@ const NewPost = () => {
   };
 
   return (
-    <Box minHeight="100%" bgcolor="white" display="flex" flexDirection="column">
+    <Box height="100%" bgcolor="white" display="flex" flexDirection="column">
       <Box p={2} display="flex" alignItems="center" bgcolor="#fa5f60">
         <IconButton onClick={() => navigate('/home/timeline')}>
           <CloseRoundedIcon sx={{ color: 'white' }} />
@@ -57,7 +57,7 @@ const NewPost = () => {
           </IconButton>
         </Box>
       </Box>
-      <Box p={2} display="flex" flexDirection="column" gap={2}>
+      <Box flex={1} p={2} display="flex" flexDirection="column" gap={2}>
         <Box display="flex" alignItems="center" gap={2}>
           <Box
             width="60px"
@@ -87,10 +87,11 @@ const NewPost = () => {
           </IconButton>
         </Box>
         <Box
+          flex={1}
           sx={{
             '& textarea': {
               width: '100%',
-              height: 400,
+              height: '100%',
               border: 'none',
               outline: 'none',
               bgcolor: 'transparent',
