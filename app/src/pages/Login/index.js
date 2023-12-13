@@ -78,7 +78,7 @@ const Login = () => {
           }}
           onClick={login}
         >
-          Login with Google
+          {loading ? 'Loading...' : 'Login with Google'}
         </Button>
       </Box>
     </Box>

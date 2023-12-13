@@ -8,6 +8,7 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
+import Loading from '../../components/Loading';
 import useProposalStore from '../../stores/proposal.store';
 import {
   acceptProposal,
@@ -55,6 +56,7 @@ const PendingProposals = () => {
 
   return (
     <MainComponent>
+      <Loading loading={loading} />
       <Box
         height="100vh"
         overflow="auto"

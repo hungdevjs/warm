@@ -13,6 +13,7 @@ import {
   removeNote,
 } from '../../services/firebase.service';
 import useNote from '../../hooks/useNote';
+import Loading from '../../components/Loading';
 
 const colors = ['#2ecc71', '#3498db', '#f1c40f', '#e74c3c', '#ecf0f1'];
 
@@ -79,8 +80,11 @@ const NoteDetail = () => {
     setLoading(false);
   };
 
+  if (!!id && !note) return <Loading loading />;
+
   return (
     <Box height="100%" bgcolor="white" display="flex" flexDirection="column">
+      <Loading loading={loading} />
       <Box
         p={2}
         position="relative"

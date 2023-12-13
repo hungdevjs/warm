@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
+import Loading from '../../components/Loading';
 import useProposalStore from '../../stores/proposal.store';
 import { searchUser, sendProposal } from '../../services/firebase.service';
 
@@ -52,6 +53,7 @@ const Propose = () => {
 
   return (
     <MainComponent>
+      <Loading loading={loading} />
       <Box
         height="100vh"
         overflow="auto"

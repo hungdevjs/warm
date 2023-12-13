@@ -8,6 +8,7 @@ import { useSnackbar } from 'notistack';
 
 import useUserStore from '../../stores/user.store';
 import { createNewPost } from '../../services/firebase.service';
+import Loading from '../../components/Loading';
 
 const NewPost = () => {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ const NewPost = () => {
 
   return (
     <Box height="100%" bgcolor="white" display="flex" flexDirection="column">
+      <Loading loading={loading} />
       <Box
         p={2}
         display="flex"

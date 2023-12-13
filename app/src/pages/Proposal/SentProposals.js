@@ -5,6 +5,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
+import Loading from '../../components/Loading';
 import useProposalStore from '../../stores/proposal.store';
 import { removeProposal } from '../../services/firebase.service';
 
@@ -37,6 +38,7 @@ const SentProposals = () => {
 
   return (
     <MainComponent>
+      <Loading loading={loading} />
       <Box
         height="100vh"
         overflow="auto"

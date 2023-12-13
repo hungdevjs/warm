@@ -21,6 +21,7 @@ import {
   createComment,
   togglePinnedStatus,
 } from '../../services/firebase.service';
+import Loading from '../../components/Loading';
 
 const Post = () => {
   const navigate = useNavigate();
@@ -33,7 +34,7 @@ const Post = () => {
 
   const sendComment = async () => {
     if (loading || !text || !text.trim()) return;
-    setLoading(true);
+    // setLoading(true);
     try {
       const data = { text, imageURL, postId: id };
       setText('');
@@ -41,7 +42,7 @@ const Post = () => {
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
-    setLoading(false);
+    // setLoading(false);
   };
 
   const togglePinned = async () => {
@@ -56,10 +57,11 @@ const Post = () => {
     setLoading(false);
   };
 
-  if (!post) return null;
+  if (!post) return <Loading loading />;
 
   return (
     <Box height="100%" display="flex" flexDirection="column">
+      <Loading loading={loading} />
       <Box
         p={2}
         position="relative"
