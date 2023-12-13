@@ -12,6 +12,7 @@ const {
   createComment,
   togglePinnedStatus,
 } = require('./callables/posts');
+const { createNewNote, updateNote, removeNote } = require('./callables/notes');
 
 admin.initializeApp();
 
@@ -23,3 +24,6 @@ exports.declineProposal = declineProposal;
 exports.createNewPost = createNewPost;
 exports.createComment = createComment;
 exports.togglePinnedStatus = togglePinnedStatus;
+exports.createNewNote = createNewNote;
+exports.updateNote = updateNote;
+exports.removeNote = removeNote;

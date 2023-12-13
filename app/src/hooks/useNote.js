@@ -1,46 +1,31 @@
-import { useEffect } from 'react';
-import {
-  onSnapshot,
-  query,
-  collection,
-  orderBy,
-  limit,
-} from 'firebase/firestore';
+import { useState, useEffect } from 'react';
+import { doc, getDoc } from 'firebase/firestore';
 
 import { firestore } from '../configs/firebase.config';
-import useNoteStore from '../stores/note.store';
 import useCoupleStore from '../stores/couple.store';
 
-const useNote = () => {
+const useNote = (id) => {
   const couple = useCoupleStore((state) => state.couple);
-  const notes = useNoteStore((state) => state.notes);
-  const setNotes = useNoteStore((state) => state.setNotes);
+  const [note, setNote] = useState(null);
 
   useEffect(() => {
-    let unsubscribe;
-
-    if (couple?.id) {
-      const q = query(
-        collection(firestore, 'couples', couple.id, 'notes'),
-        orderBy('createdAt', 'desc'),
-        limit(100)
-      );
-      unsubscribe = onSnapshot(q, (snapshot) => {
-        const docs = snapshot.docs.map((item) => ({
-          id: item.id,
-          ...item.data(),
-          creator: couple.users[item.data().creatorId],
-        }));
-        setNotes(docs);
+    if (couple?.id && id) {
+      const postDoc = doc(firestore, 'couples', couple.id, 'notes', id);
+      getDoc(postDoc).then((snapshot) => {
+        if (snapshot.exists()) {
+          setNote({
+            id,
+            ...snapshot.data(),
+            creator: couple.users[snapshot.data().creatorId],
+          });
+        }
       });
     } else {
-      setNotes([]);
+      setNote(null);
     }
+  }, [couple?.id, id]);
 
-    return () => unsubscribe?.();
-  }, [couple?.id]);
-
-  return { notes };
+  return { note };
 };
 
 export default useNote;

@@ -13,8 +13,8 @@ const NewPost = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const user = useUserStore((state) => state.user);
-  const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
+  const [text, setText] = useState('');
   const [imageURLs, setImageURLs] = useState([]);
   const [isPinned, setIsPinned] = useState(false);
 

@@ -1,14 +1,18 @@
+import { useNavigate } from 'react-router-dom';
 import { Box, IconButton, Typography } from '@mui/material';
 import AddRoundedIcon from '@mui/icons-material/AddRounded';
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
+import ViewAgendaRoundedIcon from '@mui/icons-material/ViewAgendaRounded';
 import Masonry from '@mui/lab/Masonry';
 import parse from 'html-react-parser';
 
 import Main from './components/Main';
-import useNote from '../../hooks/useNote';
+import useNoteList from '../../hooks/useNoteList';
 import moment from 'moment';
 
 const Notes = () => {
-  const { notes } = useNote();
+  const navigate = useNavigate();
+  const { notes, layoutColumn, setLayoutColumn } = useNoteList();
 
   return (
     <Main>
@@ -32,12 +36,30 @@ const Notes = () => {
           bgcolor="#fa5f60"
           sx={{ aspectRatio: '1/1' }}
         >
-          <IconButton>
+          <IconButton onClick={() => navigate('/home/notes/new')}>
             <AddRoundedIcon sx={{ color: 'white' }} />
           </IconButton>
         </Box>
+        <Box px={2} display="flex" justifyContent="flex-end" gap={1}>
+          <ViewAgendaRoundedIcon
+            sx={{
+              fontSize: 32,
+              color: layoutColumn === 1 ? '#fa5f60' : 'grey',
+              cursor: 'pointer',
+            }}
+            onClick={() => setLayoutColumn(1)}
+          />
+          <DashboardRoundedIcon
+            sx={{
+              fontSize: 32,
+              color: layoutColumn === 2 ? '#fa5f60' : 'grey',
+              cursor: 'pointer',
+            }}
+            onClick={() => setLayoutColumn(2)}
+          />
+        </Box>
         <Box p={1} display="flex" justifyContent="center">
-          <Masonry columns={2} spacing={2}>
+          <Masonry columns={layoutColumn} spacing={2}>
             {notes.map((note) => (
               <Box
                 key={note.id}
@@ -47,6 +69,8 @@ const Notes = () => {
                 display="flex"
                 flexDirection="column"
                 gap={1}
+                sx={{ cursor: 'pointer' }}
+                onClick={() => navigate(`/home/notes/${note.id}`)}
               >
                 <Box>
                   <Typography fontSize={12} color={note.textColor}>

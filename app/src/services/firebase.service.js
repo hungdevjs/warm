@@ -41,3 +41,12 @@ export const createComment = (data) =>
 
 export const togglePinnedStatus = (data) =>
   httpsCallable(functions, 'togglePinnedStatus')(data);
+
+export const createNewNote = (data) =>
+  httpsCallable(functions, 'createNewNote')(data);
+
+export const updateNote = (data) =>
+  httpsCallable(functions, 'updateNote')(data);
+
+export const removeNote = (data) =>
+  httpsCallable(functions, 'removeNote')(data);
