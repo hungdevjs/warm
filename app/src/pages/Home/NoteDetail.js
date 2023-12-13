@@ -87,13 +87,14 @@ const NoteDetail = () => {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        bgcolor="#fa5f60"
+        bgcolor="white"
+        sx={{ borderBottom: '1px solid #f2f2f2' }}
       >
         <IconButton onClick={() => navigate('/home/notes')}>
           {!!id ? (
-            <ArrowBackIosRoundedIcon sx={{ color: 'white' }} />
+            <ArrowBackIosRoundedIcon sx={{ color: 'black' }} />
           ) : (
-            <CloseRoundedIcon sx={{ color: 'white' }} />
+            <CloseRoundedIcon sx={{ color: 'black' }} />
           )}
         </IconButton>
         <Box
@@ -104,7 +105,7 @@ const NoteDetail = () => {
           justifyContent="center"
           sx={{ transform: 'translate(-50%, -50%)' }}
         >
-          <Typography fontSize="18px" fontWeight={700} color="white">
+          <Typography fontSize="18px" fontWeight={700} color="black">
             {!!id ? 'View note' : 'Create note'}
           </Typography>
         </Box>
@@ -115,8 +116,8 @@ const NoteDetail = () => {
                 fontWeight={600}
                 color={
                   !!title.trim() && !!content.trim() && !loading
-                    ? 'white'
-                    : alpha('#fff', 0.4)
+                    ? '#fa5f60'
+                    : alpha('#fa5f60', 0.4)
                 }
               >
                 {!!id ? 'Update' : 'Add'}
@@ -189,70 +190,72 @@ const NoteDetail = () => {
             </Box>
           </Box>
         )}
-        <Box
-          position="relative"
-          p={2}
-          borderRadius={2}
-          bgcolor={color}
-          flex={1}
-          display="flex"
-          flexDirection="column"
-          gap={1}
-        >
-          {!!id && canEdit && (
-            <Box position="absolute" top={8} right={8}>
-              <IconButton onClick={remove}>
-                <DeleteRoundedIcon sx={{ color: 'tomato' }} />
-              </IconButton>
-            </Box>
-          )}
+        {(!id || !!note) && (
           <Box
-            sx={{
-              '& input': {
-                width: '100%',
-                border: 'none',
-                outline: 'none',
-                bgcolor: 'transparent',
-                fontFamily: "'Montserrat', sans-serif",
-                fontSize: 18,
-                fontWeight: 600,
-                color: textColor,
-              },
-            }}
-          >
-            <input
-              placeholder="Note title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              disabled={loading || !canEdit}
-            />
-          </Box>
-          <Box
+            position="relative"
+            p={2}
+            borderRadius={2}
+            bgcolor={color}
             flex={1}
-            sx={{
-              '& textarea': {
-                width: '100%',
-                height: '100%',
-                border: 'none',
-                outline: 'none',
-                bgcolor: 'transparent',
-                fontFamily: "'Montserrat', sans-serif",
-                fontSize: 16,
-                fontWeight: 500,
-                color: textColor,
-              },
-            }}
+            display="flex"
+            flexDirection="column"
+            gap={1}
           >
-            <textarea
-              placeholder="Note content"
-              value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
+            {!!id && canEdit && (
+              <Box position="absolute" top={8} right={8}>
+                <IconButton onClick={remove}>
+                  <DeleteRoundedIcon sx={{ color: 'tomato' }} />
+                </IconButton>
+              </Box>
+            )}
+            <Box
+              sx={{
+                '& input': {
+                  width: '100%',
+                  border: 'none',
+                  outline: 'none',
+                  bgcolor: 'transparent',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 18,
+                  fontWeight: 600,
+                  color: textColor,
+                },
               }}
-              disabled={loading || !canEdit}
-            />
+            >
+              <input
+                placeholder="Note title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                disabled={loading || !canEdit}
+              />
+            </Box>
+            <Box
+              flex={1}
+              sx={{
+                '& textarea': {
+                  width: '100%',
+                  height: '100%',
+                  border: 'none',
+                  outline: 'none',
+                  bgcolor: 'transparent',
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: textColor,
+                },
+              }}
+            >
+              <textarea
+                placeholder="Note content"
+                value={content}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                }}
+                disabled={loading || !canEdit}
+              />
+            </Box>
           </Box>
-        </Box>
+        )}
       </Box>
     </Box>
   );

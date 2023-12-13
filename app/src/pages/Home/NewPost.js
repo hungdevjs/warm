@@ -37,12 +37,18 @@ const NewPost = () => {
 
   return (
     <Box height="100%" bgcolor="white" display="flex" flexDirection="column">
-      <Box p={2} display="flex" alignItems="center" bgcolor="#fa5f60">
+      <Box
+        p={2}
+        display="flex"
+        alignItems="center"
+        bgcolor="white"
+        sx={{ borderBottom: '1px solid #f2f2f2' }}
+      >
         <IconButton onClick={() => navigate('/home/timeline')}>
-          <CloseRoundedIcon sx={{ color: 'white' }} />
+          <CloseRoundedIcon sx={{ color: 'black' }} />
         </IconButton>
         <Box ml={2} flex={1} display="flex" justifyContent="center">
-          <Typography fontSize="18px" fontWeight={700} color="white">
+          <Typography fontSize="18px" fontWeight={700} color="black">
             Create post
           </Typography>
         </Box>
@@ -50,7 +56,9 @@ const NewPost = () => {
           <IconButton onClick={create}>
             <Typography
               fontWeight={600}
-              color={!!text.trim() && !loading ? 'white' : alpha('#fff', 0.4)}
+              color={
+                !!text.trim() && !loading ? '#fa5f60' : alpha('#fa5f60', 0.4)
+              }
             >
               Post
             </Typography>

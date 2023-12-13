@@ -60,9 +60,15 @@ const Post = () => {
 
   return (
     <Box height="100%" display="flex" flexDirection="column">
-      <Box p={2} display="flex" alignItems="center" bgcolor="#fa5f60">
+      <Box
+        p={2}
+        display="flex"
+        alignItems="center"
+        bgcolor="white"
+        sx={{ borderBottom: '1px solid #f2f2f2' }}
+      >
         <IconButton onClick={() => navigate('/home/timeline')}>
-          <ArrowBackIosRoundedIcon sx={{ color: 'white' }} />
+          <ArrowBackIosRoundedIcon sx={{ color: 'black' }} />
         </IconButton>
       </Box>
       <Box flex={1} overflow="auto" display="flex" flexDirection="column">

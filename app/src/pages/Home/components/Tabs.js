@@ -36,17 +36,25 @@ const Tabs = () => {
         <img src="/icons/gold.png" alt="gold" width={24} />
       </Box>
       {tabs.map((tab) => (
-        <Chip
+        <Box
           key={tab.text}
-          label={tab.text}
-          variant={tab.path === pathname ? 'filled' : 'outlined'}
+          px={1}
+          py={0.75}
+          border="1px solid #ddd"
+          borderRadius={6}
+          bgcolor={tab.path === pathname ? '#fa5f60' : 'white'}
           onClick={() => {
             pathname !== tab.path && navigate(tab.path);
           }}
-          sx={
-            tab.path === pathname ? { bgcolor: '#fa5f60', color: 'white' } : {}
-          }
-        />
+        >
+          <Typography
+            fontWeight={500}
+            fontSize={14}
+            color={tab.path === pathname ? 'white' : 'grey'}
+          >
+            {tab.text}
+          </Typography>
+        </Box>
       ))}
     </Box>
   );
