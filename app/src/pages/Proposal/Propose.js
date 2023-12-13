@@ -4,15 +4,12 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
-import useCoupleStore from '../../stores/couple.store';
 import useProposalStore from '../../stores/proposal.store';
 import { searchUser, sendProposal } from '../../services/firebase.service';
 
 const Propose = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const couple = useCoupleStore((state) => state.couple);
-  const coupleInitialized = useCoupleStore((state) => state.initialized);
   const proposalInitialized = useProposalStore((state) => state.initialized);
   const sentProposals = useProposalStore((state) => state.sentProposals);
   const pendingProposals = useProposalStore((state) => state.pendingProposals);
@@ -21,17 +18,9 @@ const Propose = () => {
   const [partner, setPartner] = useState(null);
 
   useEffect(() => {
-    if (coupleInitialized) {
-      if (!!couple) {
-        navigate('/home');
-      }
-    }
-  }, [coupleInitialized, couple]);
-
-  useEffect(() => {
     if (proposalInitialized) {
       if (!!sentProposals.length) {
-        navigate('/home/sent-proposals');
+        navigate('/sent-proposals');
       }
     }
   }, [proposalInitialized, sentProposals]);
@@ -64,12 +53,12 @@ const Propose = () => {
   return (
     <MainComponent>
       <Box
-        minHeight="100%"
+        height="100vh"
+        overflow="auto"
         p={2}
         bgcolor="#fa5f60"
         display="flex"
         flexDirection="column"
-        justifyContent="center"
         gap={2}
       >
         <Box
@@ -95,6 +84,10 @@ const Propose = () => {
                   aspectRatio: '1/1',
                   '& img': {
                     display: 'block',
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
                   },
                 }}
               >
@@ -177,7 +170,7 @@ const Propose = () => {
                   cursor: 'pointer',
                 },
               }}
-              onClick={() => navigate('/home/pending-proposals')}
+              onClick={() => navigate('/pending-proposals')}
             >
               You have <span>{pendingProposals.length} pending proposals</span>
             </Typography>

@@ -72,7 +72,7 @@ const sendProposal = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in sending proposal', data, err);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -101,7 +101,7 @@ const removeProposal = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in removing proposal', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -189,7 +189,7 @@ const acceptProposal = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in accepting proposal', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -218,7 +218,7 @@ const declineProposal = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in declining proposal', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 

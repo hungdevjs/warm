@@ -38,7 +38,7 @@ const createNewNote = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in creating new note', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -81,7 +81,7 @@ const updateNote = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in updating note', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -116,7 +116,7 @@ const removeNote = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in removing note', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 

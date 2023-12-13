@@ -1,44 +1,25 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, alpha } from '@mui/material';
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
 import useProposalStore from '../../stores/proposal.store';
-import useCoupleStore from '../../stores/couple.store';
-import {
-  acceptProposal,
-  declineProposal,
-} from '../../services/firebase.service';
+import { removeProposal } from '../../services/firebase.service';
 
-const PendingProposals = () => {
-  const navigate = useNavigate();
+const SentProposals = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const pendingProposals = useProposalStore((state) => state.pendingProposals);
-  const couple = useCoupleStore((state) => state.couple);
-  const coupleInitialized = useCoupleStore((state) => state.initialized);
+  const navigate = useNavigate();
+  const sentProposals = useProposalStore((state) => state.sentProposals);
   const proposalInitialized = useProposalStore((state) => state.initialized);
   const [loading, setLoading] = useState(false);
 
-  const accept = async (proposalId) => {
+  const remove = async (proposalId) => {
     setLoading(true);
     try {
-      await acceptProposal({ proposalId });
-      enqueueSnackbar('Accepted proposal', { variant: 'success' });
-    } catch (err) {
-      console.error(err);
-      enqueueSnackbar(err.message, { variant: 'error' });
-    }
-    setLoading(false);
-  };
-
-  const decline = async (proposalId) => {
-    setLoading(true);
-    try {
-      await declineProposal({ proposalId });
-      enqueueSnackbar('Declined proposal', { variant: 'success' });
+      await removeProposal({ proposalId });
+      enqueueSnackbar('Removed proposal', { variant: 'success' });
     } catch (err) {
       console.error(err);
       enqueueSnackbar(err.message, { variant: 'error' });
@@ -47,17 +28,18 @@ const PendingProposals = () => {
   };
 
   useEffect(() => {
-    if (coupleInitialized && proposalInitialized) {
-      if (!!couple || !pendingProposals.length) {
-        navigate('/home');
+    if (proposalInitialized) {
+      if (!sentProposals.length) {
+        navigate('/');
       }
     }
-  }, [coupleInitialized, proposalInitialized, couple, pendingProposals]);
+  }, [proposalInitialized, sentProposals]);
 
   return (
     <MainComponent>
       <Box
-        minHeight="100%"
+        height="100vh"
+        overflow="auto"
         py={2}
         display="flex"
         flexDirection="column"
@@ -66,14 +48,14 @@ const PendingProposals = () => {
         <Box display="flex" flexDirection="column" gap={2}>
           <Box px={2}>
             <Typography fontSize={20} fontWeight={600}>
-              Your pending proposals
+              Your sent proposals
             </Typography>
             <Typography fontStyle="italic">
-              Choose your partner wisely!
+              Waiting for them to response...
             </Typography>
           </Box>
           <Box display="flex" flexDirection="column" gap={1}>
-            {pendingProposals.map((proposal) => (
+            {sentProposals.map((proposal) => (
               <Box key={proposal.id} bgcolor="#f5f5f5" p={2}>
                 <Box display="flex" alignItems="center" gap={2}>
                   <Box
@@ -82,7 +64,7 @@ const PendingProposals = () => {
                     overflow="hidden"
                     sx={{
                       aspectRatio: '1/1',
-                      backgroundImage: `url(${proposal.sender?.avatarURL})`,
+                      backgroundImage: `url(${proposal.receiver?.avatarURL})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
@@ -103,34 +85,22 @@ const PendingProposals = () => {
                           fontSize={18}
                           fontWeight={600}
                         >
-                          {proposal.sender?.username}
+                          {proposal.receiver?.username}
                         </Typography>
                         <Typography color="white">
-                          {proposal.sender?.email}
+                          {proposal.receiver?.email}
                         </Typography>
                       </Box>
                       <Box display="flex" gap={2}>
                         <Button
-                          // size="small"
-                          variant="contained"
-                          color="success"
-                          startIcon={<CheckRoundedIcon />}
-                          sx={{ flex: 1 }}
-                          onClick={() => accept(proposal.id)}
-                          disabled={loading}
-                        >
-                          Accept
-                        </Button>
-                        <Button
-                          // size="small"
                           variant="contained"
                           color="error"
-                          startIcon={<CloseRoundedIcon />}
+                          startIcon={<DeleteRoundedIcon />}
                           sx={{ flex: 1 }}
-                          onClick={() => decline(proposal.id)}
+                          onClick={() => remove(proposal.id)}
                           disabled={loading}
                         >
-                          Decline
+                          Delete proposal
                         </Button>
                       </Box>
                     </Box>
@@ -145,4 +115,4 @@ const PendingProposals = () => {
   );
 };
 
-export default PendingProposals;
+export default SentProposals;

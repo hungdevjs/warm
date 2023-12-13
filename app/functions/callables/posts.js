@@ -36,7 +36,7 @@ const createNewPost = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in creating new post', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -88,7 +88,7 @@ const createComment = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in creating comment', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 
@@ -125,7 +125,7 @@ const togglePinnedStatus = functions.https.onCall(async (data, context) => {
     return { status: 'OK' };
   } catch (err) {
     functions.logger.error('error in toggling pinned status', data, context);
-    throw new functions.https.HttpsError('bad-request', err.message, err);
+    throw new functions.https.HttpsError('invalid-argument', err.message, err);
   }
 });
 

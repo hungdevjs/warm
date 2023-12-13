@@ -1,28 +1,43 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Button, alpha } from '@mui/material';
-import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import { Box, Typography, IconButton, Button, alpha } from '@mui/material';
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+
 import { useSnackbar } from 'notistack';
 
 import MainComponent from '../../components/MainComponent';
 import useProposalStore from '../../stores/proposal.store';
-import useCoupleStore from '../../stores/couple.store';
-import { removeProposal } from '../../services/firebase.service';
+import {
+  acceptProposal,
+  declineProposal,
+} from '../../services/firebase.service';
 
-const SentProposals = () => {
-  const { enqueueSnackbar } = useSnackbar();
+const PendingProposals = () => {
   const navigate = useNavigate();
-  const sentProposals = useProposalStore((state) => state.sentProposals);
-  const couple = useCoupleStore((state) => state.couple);
-  const coupleInitialized = useCoupleStore((state) => state.initialized);
+  const { enqueueSnackbar } = useSnackbar();
+  const pendingProposals = useProposalStore((state) => state.pendingProposals);
   const proposalInitialized = useProposalStore((state) => state.initialized);
   const [loading, setLoading] = useState(false);
 
-  const remove = async (proposalId) => {
+  const accept = async (proposalId) => {
     setLoading(true);
     try {
-      await removeProposal({ proposalId });
-      enqueueSnackbar('Removed proposal', { variant: 'success' });
+      await acceptProposal({ proposalId });
+      enqueueSnackbar('Accepted proposal', { variant: 'success' });
+    } catch (err) {
+      console.error(err);
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
+    setLoading(false);
+  };
+
+  const decline = async (proposalId) => {
+    setLoading(true);
+    try {
+      await declineProposal({ proposalId });
+      enqueueSnackbar('Declined proposal', { variant: 'success' });
     } catch (err) {
       console.error(err);
       enqueueSnackbar(err.message, { variant: 'error' });
@@ -31,33 +46,39 @@ const SentProposals = () => {
   };
 
   useEffect(() => {
-    if (coupleInitialized && proposalInitialized) {
-      if (!!couple || !sentProposals.length) {
+    if (proposalInitialized) {
+      if (!pendingProposals.length) {
         navigate('/home');
       }
     }
-  }, [coupleInitialized, proposalInitialized, couple, sentProposals]);
+  }, [proposalInitialized, pendingProposals]);
 
   return (
     <MainComponent>
       <Box
-        minHeight="100%"
+        height="100vh"
+        overflow="auto"
         py={2}
         display="flex"
         flexDirection="column"
         gap={4}
       >
         <Box display="flex" flexDirection="column" gap={2}>
-          <Box px={2}>
-            <Typography fontSize={20} fontWeight={600}>
-              Your sent proposals
-            </Typography>
-            <Typography fontStyle="italic">
-              Waiting for them to response...
-            </Typography>
+          <Box px={2} display="flex" alignItems="center">
+            <IconButton onClick={() => navigate('/')}>
+              <ArrowBackIosRoundedIcon sx={{ color: 'black' }} />
+            </IconButton>
+            <Box px={2}>
+              <Typography fontSize={20} fontWeight={600}>
+                Your pending proposals
+              </Typography>
+              <Typography fontStyle="italic">
+                Choose your partner wisely!
+              </Typography>
+            </Box>
           </Box>
           <Box display="flex" flexDirection="column" gap={1}>
-            {sentProposals.map((proposal) => (
+            {pendingProposals.map((proposal) => (
               <Box key={proposal.id} bgcolor="#f5f5f5" p={2}>
                 <Box display="flex" alignItems="center" gap={2}>
                   <Box
@@ -66,7 +87,7 @@ const SentProposals = () => {
                     overflow="hidden"
                     sx={{
                       aspectRatio: '1/1',
-                      backgroundImage: `url(${proposal.receiver?.avatarURL})`,
+                      backgroundImage: `url(${proposal.sender?.avatarURL})`,
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                     }}
@@ -87,22 +108,34 @@ const SentProposals = () => {
                           fontSize={18}
                           fontWeight={600}
                         >
-                          {proposal.receiver?.username}
+                          {proposal.sender?.username}
                         </Typography>
                         <Typography color="white">
-                          {proposal.receiver?.email}
+                          {proposal.sender?.email}
                         </Typography>
                       </Box>
                       <Box display="flex" gap={2}>
                         <Button
+                          // size="small"
                           variant="contained"
-                          color="error"
-                          startIcon={<DeleteRoundedIcon />}
+                          color="success"
+                          startIcon={<CheckRoundedIcon />}
                           sx={{ flex: 1 }}
-                          onClick={() => remove(proposal.id)}
+                          onClick={() => accept(proposal.id)}
                           disabled={loading}
                         >
-                          Delete proposal
+                          Accept
+                        </Button>
+                        <Button
+                          // size="small"
+                          variant="contained"
+                          color="error"
+                          startIcon={<CloseRoundedIcon />}
+                          sx={{ flex: 1 }}
+                          onClick={() => decline(proposal.id)}
+                          disabled={loading}
+                        >
+                          Decline
                         </Button>
                       </Box>
                     </Box>
@@ -117,4 +150,4 @@ const SentProposals = () => {
   );
 };
 
-export default SentProposals;
+export default PendingProposals;

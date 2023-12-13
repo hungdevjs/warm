@@ -7,6 +7,7 @@ import useUser from '../hooks/useUser';
 import useCouple from '../hooks/useCouple';
 import useProposal from '../hooks/useProposal';
 import useUserStore from '../stores/user.store';
+import ProposalRoute from './ProposalRoute';
 
 const Navigations = () => {
   const user = useUserStore((state) => state.user);
@@ -19,6 +20,8 @@ const Navigations = () => {
   if (!initialized || !authInitialized) return <SplashScreen />;
 
   if (!user) return <AuthRoutes />;
+
+  if (!user.coupleId) return <ProposalRoute />;
 
   return (
     <Layout>
