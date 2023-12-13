@@ -25,4 +25,4 @@ export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
 export const functions = getFunctions(firebaseApp);
 
-connectFunctionsEmulator(functions, 'localhost', 5001);
+// connectFunctionsEmulator(functions, 'localhost', 5001);
