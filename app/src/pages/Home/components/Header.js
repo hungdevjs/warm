@@ -10,14 +10,16 @@ const Header = () => {
       alignItems="center"
       justifyContent="space-between"
       gap={2}
-      bgcolor="#fa5f60"
+      // bgcolor="#fa5f60"
+      bgcolor="white"
     >
       <Box display="flex" alignItems="center" gap={1}>
-        <img src="/logo-white-192.png" width={32} alt="logo" />
+        <img src="/logo-icon.png" width={32} alt="logo" />
         <Typography
           fontSize={20}
           fontFamily="'Sigmar One', sans-serif"
-          color="white"
+          // color="white"
+          color="#fa5f60"
           align="center"
         >
           Warm
@@ -25,7 +27,7 @@ const Header = () => {
       </Box>
       <Box>
         <IconButton>
-          <SearchRoundedIcon sx={{ color: 'white' }} />
+          <SearchRoundedIcon sx={{ color: '#fa5f60' }} />
         </IconButton>
       </Box>
     </Box>
