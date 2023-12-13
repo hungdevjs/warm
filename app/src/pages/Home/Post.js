@@ -62,6 +62,7 @@ const Post = () => {
     <Box height="100%" display="flex" flexDirection="column">
       <Box
         p={2}
+        position="relative"
         display="flex"
         alignItems="center"
         bgcolor="white"
@@ -70,6 +71,16 @@ const Post = () => {
         <IconButton onClick={() => navigate('/home/timeline')}>
           <ArrowBackIosRoundedIcon sx={{ color: 'black' }} />
         </IconButton>
+        <Box
+          position="absolute"
+          top="50%"
+          left="50%"
+          display="flex"
+          justifyContent="center"
+          sx={{ transform: 'translate(-50%, -50%)' }}
+        >
+          <Typography fontWeight={500}>{post.creator.username}</Typography>
+        </Box>
       </Box>
       <Box flex={1} overflow="auto" display="flex" flexDirection="column">
         <Box bgcolor="#fff" p={2} display="flex" flexDirection="column" gap={2}>
