@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import {
@@ -16,6 +16,7 @@ import moment from 'moment';
 import parse from 'html-react-parser';
 import { useSnackbar } from 'notistack';
 
+import useUserStore from '../../stores/user.store';
 import usePost from '../../hooks/usePost';
 import {
   createComment,
@@ -28,9 +29,11 @@ const Post = () => {
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
   const { post, setPost, comments } = usePost(id);
+  const user = useUserStore((state) => state.user);
   const [text, setText] = useState('');
   const [imageURL, setImageURL] = useState('');
   const [loading, setLoading] = useState(false);
+  const bottomRef = useRef();
 
   const sendComment = async () => {
     if (loading || !text || !text.trim()) return;
@@ -39,6 +42,7 @@ const Post = () => {
       const data = { text, imageURL, postId: id };
       setText('');
       await createComment(data);
+      bottomRef.current?.scrollIntoView();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
@@ -49,8 +53,7 @@ const Post = () => {
     if (loading) return;
     setLoading(true);
     try {
-      await togglePinnedStatus({ postId: post.id });
-      setPost({ ...post, isPinned: !post.isPinned });
+      await togglePinnedStatus({ postId: post.id, isPinned: !post.isPinned });
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
@@ -114,16 +117,22 @@ const Post = () => {
                 {moment(post.createdAt.toDate()).format('DD/MM/YYYY HH:mm')}
               </Typography>
             </Box>
-            <IconButton
-              sx={{ alignSelf: 'flex-start' }}
-              onClick={() => togglePinned(post.id)}
-            >
-              {post.isPinned ? (
+            {post.creatorId === user.id ? (
+              <IconButton
+                sx={{ alignSelf: 'flex-start' }}
+                onClick={() => togglePinned(post.id)}
+              >
+                {post.isPinned ? (
+                  <PushPinIcon sx={{ color: '#fa5f60' }} />
+                ) : (
+                  <PushPinOutlinedIcon />
+                )}
+              </IconButton>
+            ) : post.isPinned ? (
+              <IconButton sx={{ alignSelf: 'flex-start' }} disabled>
                 <PushPinIcon sx={{ color: '#fa5f60' }} />
-              ) : (
-                <PushPinOutlinedIcon />
-              )}
-            </IconButton>
+              </IconButton>
+            ) : null}
           </Box>
           <Box>{parse(post.text)}</Box>
         </Box>
@@ -154,11 +163,13 @@ const Post = () => {
                 <img src={comment.creator.avatarURL} alt="avatar" />
               </Box>
               <Box flex={1} bgcolor="white" py={1} px={2} borderRadius={2}>
-                <Typography fontSize={12}>
-                  {moment(comment.createdAt.toDate()).format(
-                    'DD/MM/YYYY HH:mm'
-                  )}
-                </Typography>
+                {comment.createdAt && (
+                  <Typography fontSize={12}>
+                    {moment(comment.createdAt.toDate()).format(
+                      'DD/MM/YYYY HH:mm'
+                    )}
+                  </Typography>
+                )}
                 <Box>
                   <Typography fontWeight={600}>
                     {comment.creator.username}
@@ -169,6 +180,7 @@ const Post = () => {
             </Box>
           ))}
         </Box>
+        <Box ref={bottomRef} />
       </Box>
       <Box p={2}>
         <TextField

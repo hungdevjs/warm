@@ -36,7 +36,7 @@ const usePost = (id) => {
               id,
               'comments'
             ),
-            orderBy('createdAt', 'desc')
+            orderBy('createdAt', 'asc')
           );
           unsubscribe = onSnapshot(q, (commentSnapshot) => {
             setComments(

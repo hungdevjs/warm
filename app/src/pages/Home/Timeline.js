@@ -22,11 +22,11 @@ const Timeline = () => {
   const { posts } = useTimeline();
   const [loadingIds, setLoadingIds] = useState([]);
 
-  const togglePinned = async (postId) => {
+  const togglePinned = async (postId, isPinned) => {
     if (loadingIds.includes(postId)) return;
     setLoadingIds((prev) => [...prev, postId]);
     try {
-      await togglePinnedStatus({ postId });
+      await togglePinnedStatus({ postId, isPinned });
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
@@ -107,18 +107,26 @@ const Timeline = () => {
                   {moment(post.createdAt.toDate()).format('DD/MM/YYYY HH:mm')}
                 </Typography>
               </Box>
-              <IconButton
-                sx={{ alignSelf: 'flex-start' }}
-                onClick={() => togglePinned(post.id)}
-              >
-                {post.isPinned ? (
+              {post.creatorId === user.id ? (
+                <IconButton
+                  sx={{ alignSelf: 'flex-start' }}
+                  onClick={() => togglePinned(post.id, !post.isPinned)}
+                >
+                  {post.isPinned ? (
+                    <PushPinIcon sx={{ color: '#fa5f60' }} />
+                  ) : (
+                    <PushPinOutlinedIcon />
+                  )}
+                </IconButton>
+              ) : post.isPinned ? (
+                <IconButton sx={{ alignSelf: 'flex-start' }} disabled>
                   <PushPinIcon sx={{ color: '#fa5f60' }} />
-                ) : (
-                  <PushPinOutlinedIcon />
-                )}
-              </IconButton>
+                </IconButton>
+              ) : null}
             </Box>
-            <Box>{parse(post.text)}</Box>
+            <Box onClick={() => navigate(`/home/posts/${post.id}`)}>
+              {parse(post.text)}
+            </Box>
             <Box>
               <Typography
                 color="grey"
