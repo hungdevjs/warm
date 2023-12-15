@@ -5,10 +5,11 @@ import {
   collection,
   where,
   addDoc,
-  serverTimestamp,
   doc,
   updateDoc,
   deleteDoc,
+  increment,
+  serverTimestamp,
 } from 'firebase/firestore';
 import { httpsCallable } from 'firebase/functions';
 import validator from 'validator';
@@ -91,6 +92,9 @@ export const createComment = async (data) => {
     creatorId: uid,
     createdAt: serverTimestamp(),
   });
+
+  const postRef = doc(firestore, 'couples', coupleId, 'posts', postId);
+  await updateDoc(postRef, { numberOfComments: increment(1) });
 };
 
 export const togglePinnedStatus = async (data) => {
