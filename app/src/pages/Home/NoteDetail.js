@@ -5,6 +5,8 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { useSnackbar } from 'notistack';
+import moment from 'moment';
+import parse from 'html-react-parser';
 
 import useUserStore from '../../stores/user.store';
 import {
@@ -195,7 +197,7 @@ const NoteDetail = () => {
             </Box>
           </Box>
         )}
-        {(!id || !!note) && (
+        {canEdit && (
           <Box
             position="relative"
             p={2}
@@ -259,6 +261,31 @@ const NoteDetail = () => {
                 disabled={loading || !canEdit}
               />
             </Box>
+          </Box>
+        )}
+        {!canEdit && !!note && (
+          <Box
+            p={2}
+            bgcolor={note.color}
+            borderRadius={2}
+            display="flex"
+            flexDirection="column"
+            gap={1}
+          >
+            <Box>
+              <Typography fontSize={12} color={note.textColor}>
+                {moment(note.createdAt.toDate()).format('DD/MM/YYYY HH:mm')}
+              </Typography>
+              <Typography fontSize={18} fontWeight={700} color={note.textColor}>
+                {note.title}
+              </Typography>
+              <Typography fontSize={12} color={note.textColor}>
+                by {note.creator.username}
+              </Typography>
+            </Box>
+            <Typography fontSize={14} color={note.textColor}>
+              {parse(note.content)}
+            </Typography>
           </Box>
         )}
       </Box>
