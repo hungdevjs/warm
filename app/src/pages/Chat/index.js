@@ -51,6 +51,13 @@ const Chat = () => {
         flexDirection="column"
         gap={0.5}
         p={1}
+        sx={{
+          MsOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+        }}
       >
         {messages.map((message) => (
           <Box
