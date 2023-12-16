@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import {
@@ -32,6 +32,10 @@ const PostDetail = () => {
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef();
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView();
+  }, [comments]);
+
   const sendComment = async () => {
     if (loading || !text || !text.trim()) return;
     // setLoading(true);
@@ -39,7 +43,6 @@ const PostDetail = () => {
       const data = { text, imageURL, postId: id };
       setText('');
       await createComment(data);
-      bottomRef.current?.scrollIntoView();
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }

@@ -194,3 +194,18 @@ export const removeTodo = async (data) => {
   const todoRef = doc(firestore, 'couples', coupleId, 'todos', id);
   await deleteDoc(todoRef);
 };
+
+export const createMessage = async (data) => {
+  const { uid, coupleId } = checkAuth();
+
+  const { text } = data;
+  if (!text || !text.trim()) throw new Error('Invalid text');
+
+  const collectionRef = collection(firestore, 'couples', coupleId, 'messages');
+  await addDoc(collectionRef, {
+    text,
+    file: null,
+    creatorId: uid,
+    createdAt: serverTimestamp(),
+  });
+};
