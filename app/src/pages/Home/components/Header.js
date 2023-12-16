@@ -25,11 +25,12 @@ const Header = () => {
           Warm
         </Typography>
       </Box>
-      <Box>
+      {/* TODO: implement search feature later */}
+      {/* <Box>
         <IconButton>
           <SearchRoundedIcon sx={{ color: '#fa5f60' }} />
         </IconButton>
-      </Box>
+      </Box> */}
     </Box>
   );
 };
