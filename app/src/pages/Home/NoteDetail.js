@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, IconButton, Typography, alpha } from '@mui/material';
+import { Box, Button, IconButton, Typography, alpha } from '@mui/material';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -160,6 +160,31 @@ const NoteDetail = () => {
               {!!id ? note?.creator?.username : user.username}
             </Typography>
           </Box>
+          {!!id && canEdit && (
+            <Box>
+              <Button
+                size="small"
+                variant="contained"
+                color="error"
+                startIcon={<DeleteRoundedIcon sx={{ color: 'white' }} />}
+                onClick={remove}
+                sx={{
+                  boxShadow: 'none',
+                  bgcolor: '#fe415b',
+                  '&:active': {
+                    boxShadow: 'none',
+                    bgcolor: '#fe415b',
+                  },
+                  '&:hover': {
+                    boxShadow: 'none',
+                    bgcolor: '#fe415b',
+                  },
+                }}
+              >
+                Remove
+              </Button>
+            </Box>
+          )}
         </Box>
         {canEdit && (
           <Box display="flex" flexDirection="column" gap={1}>
@@ -208,13 +233,6 @@ const NoteDetail = () => {
             flexDirection="column"
             gap={1}
           >
-            {!!id && canEdit && (
-              <Box position="absolute" top={8} right={8}>
-                <IconButton onClick={remove}>
-                  <DeleteRoundedIcon sx={{ color: 'tomato' }} />
-                </IconButton>
-              </Box>
-            )}
             <Box
               sx={{
                 '& input': {
