@@ -72,7 +72,7 @@ const Chat = () => {
               py={1}
               maxWidth="80%"
               borderRadius={2}
-              bgcolor={message.creatorId === user.id ? '#fe415b' : '#f2f2f2'}
+              bgcolor={message.creatorId === user.id ? '#fa5f60' : '#f2f2f2'}
             >
               <Typography
                 color={message.creatorId === user.id ? 'white' : 'black'}
