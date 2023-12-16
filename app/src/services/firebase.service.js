@@ -72,6 +72,15 @@ export const createNewPost = async (data) => {
   });
 };
 
+export const removePost = async (data) => {
+  const { coupleId } = checkAuth();
+
+  const { id } = data;
+
+  const postRef = doc(firestore, 'couples', coupleId, 'posts', id);
+  await deleteDoc(postRef);
+};
+
 export const createComment = async (data) => {
   const { uid, coupleId } = checkAuth();
 

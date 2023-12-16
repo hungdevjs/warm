@@ -5,30 +5,27 @@ import {
   Box,
   Typography,
   IconButton,
+  Button,
   TextField,
   InputAdornment,
 } from '@mui/material';
-import PushPinIcon from '@mui/icons-material/PushPin';
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
+import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import moment from 'moment';
 import parse from 'html-react-parser';
 import { useSnackbar } from 'notistack';
 
 import useUserStore from '../../stores/user.store';
 import usePost from '../../hooks/usePost';
-import {
-  createComment,
-  togglePinnedStatus,
-} from '../../services/firebase.service';
+import { createComment, removePost } from '../../services/firebase.service';
 import Loading from '../../components/Loading';
 
-const Post = () => {
+const PostDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  const { post, setPost, comments } = usePost(id);
+  const { post, comments } = usePost(id);
   const user = useUserStore((state) => state.user);
   const [text, setText] = useState('');
   const [imageURL, setImageURL] = useState('');
@@ -49,11 +46,12 @@ const Post = () => {
     // setLoading(false);
   };
 
-  const togglePinned = async () => {
+  const remove = async () => {
     if (loading) return;
     setLoading(true);
     try {
-      await togglePinnedStatus({ postId: post.id, isPinned: !post.isPinned });
+      await removePost({ id: post.id });
+      navigate('/home/timeline');
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
     }
@@ -117,22 +115,29 @@ const Post = () => {
                 {moment(post.createdAt.toDate()).format('DD/MM/YYYY HH:mm')}
               </Typography>
             </Box>
-            {post.creatorId === user.id ? (
-              <IconButton
-                sx={{ alignSelf: 'flex-start' }}
-                onClick={() => togglePinned(post.id)}
+            {post.creatorId === user.id && (
+              <Button
+                size="small"
+                variant="contained"
+                color="error"
+                startIcon={<DeleteRoundedIcon sx={{ color: 'white' }} />}
+                onClick={remove}
+                sx={{
+                  boxShadow: 'none',
+                  bgcolor: '#fe415b',
+                  '&:active': {
+                    boxShadow: 'none',
+                    bgcolor: '#fe415b',
+                  },
+                  '&:hover': {
+                    boxShadow: 'none',
+                    bgcolor: '#fe415b',
+                  },
+                }}
               >
-                {post.isPinned ? (
-                  <PushPinIcon sx={{ color: '#fa5f60' }} />
-                ) : (
-                  <PushPinOutlinedIcon />
-                )}
-              </IconButton>
-            ) : post.isPinned ? (
-              <IconButton sx={{ alignSelf: 'flex-start' }} disabled>
-                <PushPinIcon sx={{ color: '#fa5f60' }} />
-              </IconButton>
-            ) : null}
+                Remove
+              </Button>
+            )}
           </Box>
           <Box>{parse(post.text)}</Box>
         </Box>
@@ -232,4 +237,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default PostDetail;

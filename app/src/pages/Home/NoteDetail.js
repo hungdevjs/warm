@@ -161,29 +161,27 @@ const NoteDetail = () => {
             </Typography>
           </Box>
           {!!id && canEdit && (
-            <Box>
-              <Button
-                size="small"
-                variant="contained"
-                color="error"
-                startIcon={<DeleteRoundedIcon sx={{ color: 'white' }} />}
-                onClick={remove}
-                sx={{
+            <Button
+              size="small"
+              variant="contained"
+              color="error"
+              startIcon={<DeleteRoundedIcon sx={{ color: 'white' }} />}
+              onClick={remove}
+              sx={{
+                boxShadow: 'none',
+                bgcolor: '#fe415b',
+                '&:active': {
                   boxShadow: 'none',
                   bgcolor: '#fe415b',
-                  '&:active': {
-                    boxShadow: 'none',
-                    bgcolor: '#fe415b',
-                  },
-                  '&:hover': {
-                    boxShadow: 'none',
-                    bgcolor: '#fe415b',
-                  },
-                }}
-              >
-                Remove
-              </Button>
-            </Box>
+                },
+                '&:hover': {
+                  boxShadow: 'none',
+                  bgcolor: '#fe415b',
+                },
+              }}
+            >
+              Remove
+            </Button>
           )}
         </Box>
         {canEdit && (
