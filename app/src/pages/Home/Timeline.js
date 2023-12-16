@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography, IconButton, alpha } from '@mui/material';
 import ImageIcon from '@mui/icons-material/Image';
-import PushPinOutlinedIcon from '@mui/icons-material/PushPinOutlined';
-import PushPinIcon from '@mui/icons-material/PushPin';
 import moment from 'moment';
-import parse from 'html-react-parser';
 import { useSnackbar } from 'notistack';
 
 import Main from './components/Main';
@@ -39,6 +36,35 @@ const Timeline = () => {
   return (
     <Main>
       <Box display="flex" flexDirection="column" gap={0.75}>
+        <Box
+          sx={{
+            aspectRatio: '5/2',
+            backgroundImage: `url(${couple.coverURL})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          <Box
+            width="100%"
+            height="100%"
+            bgcolor={alpha('#000', 0.3)}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Box>
+              <Typography
+                fontSize={24}
+                fontWeight={700}
+                color="white"
+                align="center"
+              >
+                {moment().diff(moment(couple.startDate.toDate()), 'days') + 1}{' '}
+                days together
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
         <Box bgcolor="#fff" p={2} display="flex" alignItems="center" gap={2}>
           <Box
             width="60px"
@@ -59,9 +85,7 @@ const Timeline = () => {
           </Box>
           <Box flex={1} onClick={() => navigate('/home/posts')}>
             <Typography fontSize={14} color="#888">
-              Today is{' '}
-              {moment().diff(moment(couple.startDate.toDate()), 'days')} days
-              since your first day. How do you feel?
+              How do you feel today?
             </Typography>
           </Box>
           {/* TODO: implement upload image later */}
