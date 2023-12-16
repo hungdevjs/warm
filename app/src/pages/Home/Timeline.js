@@ -54,6 +54,14 @@ const Timeline = () => {
           >
             <Box>
               <Typography
+                fontSize={18}
+                fontWeight={600}
+                color="white"
+                align="center"
+              >
+                {couple.name}
+              </Typography>
+              <Typography
                 fontSize={24}
                 fontWeight={700}
                 color="white"
@@ -89,14 +97,14 @@ const Timeline = () => {
             </Typography>
           </Box>
           {/* TODO: implement upload image later */}
-          <IconButton>
+          {/* <IconButton>
             <ImageIcon
               sx={{ cursor: 'pointer', fontSize: '32px', color: '#fa5f60' }}
             />
-          </IconButton>
+          </IconButton> */}
         </Box>
         {posts.map((post) => (
-          <PostItem post={post} togglePinned={togglePinned} />
+          <PostItem key={post.id} post={post} togglePinned={togglePinned} />
         ))}
       </Box>
     </Main>

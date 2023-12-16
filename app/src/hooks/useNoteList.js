@@ -24,8 +24,7 @@ const useNoteList = () => {
     if (couple?.id) {
       const q = query(
         collection(firestore, 'couples', couple.id, 'notes'),
-        orderBy('createdAt', 'desc'),
-        limit(100)
+        orderBy('createdAt', 'desc')
       );
       unsubscribe = onSnapshot(q, (snapshot) => {
         const docs = snapshot.docs.map((item) => ({

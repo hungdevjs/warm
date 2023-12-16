@@ -158,3 +158,39 @@ export const removeNote = async (data) => {
 
   await deleteDoc(noteRef);
 };
+
+export const createTodo = async (data) => {
+  const { uid, coupleId } = checkAuth();
+
+  const { title, items } = data;
+  if (!title || !title.trim()) throw new Error('Invalid title');
+  if (!items || !items.length) throw new Error('Invalid items');
+
+  const collectionRef = collection(firestore, 'couples', coupleId, 'todos');
+  await addDoc(collectionRef, {
+    title,
+    items,
+    creatorId: uid,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const updateTodo = async (data) => {
+  const { coupleId } = checkAuth();
+
+  const { id, title, items } = data;
+  if (!title || !title.trim()) throw new Error('Invalid title');
+  if (!items || !items.length) throw new Error('Invalid items');
+
+  const todoRef = doc(firestore, 'couples', coupleId, 'todos', id);
+  await updateDoc(todoRef, { title, items });
+};
+
+export const removeTodo = async (data) => {
+  const { coupleId } = checkAuth();
+
+  const { id } = data;
+
+  const todoRef = doc(firestore, 'couples', coupleId, 'todos', id);
+  await deleteDoc(todoRef);
+};
