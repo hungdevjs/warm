@@ -96,6 +96,7 @@ const Chat = () => {
             border: 'none',
             outline: 'none',
             bgcolor: 'transparent',
+            fontSize: 16,
           },
         }}
       >
@@ -105,7 +106,7 @@ const Chat = () => {
           onChange={(e) => setText(e.target.value)}
           onKeyUp={(e) => e.key === 'Enter' && sendMessage()}
         />
-        <IconButton disabled={!text || !text.trim()}>
+        <IconButton disabled={!text || !text.trim()} onClick={sendMessage}>
           <SendRoundedIcon
             sx={{ color: !text || !text.trim() ? 'lightgrey' : '#fe415b' }}
           />

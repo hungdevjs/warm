@@ -75,7 +75,7 @@ const Menu = () => {
         >
           <img src={user.avatarURL} alt="avatar" />
         </Box>
-        <Typography fontSize={20} fontWeight={600} color="white">
+        <Typography fontWeight={600} color="white">
           {user.username}
         </Typography>
       </Box>
@@ -89,7 +89,7 @@ const Menu = () => {
         onClick={() => navigate('/menus/couple')}
       >
         <img src="/icons/hearts.png" alt="heart" width={60} />
-        <Typography fontSize={20} fontWeight={600} color="white" align="center">
+        <Typography fontWeight={600} color="white" align="center">
           {couple?.name}
         </Typography>
       </Box>
@@ -107,11 +107,7 @@ const Menu = () => {
                 onClick={() => navigate(item.path)}
               >
                 <img src={item.icon} alt="icon" width={40} />
-                <Typography
-                  fontSize={20}
-                  fontWeight={600}
-                  color={item.textColor}
-                >
+                <Typography fontWeight={600} color={item.textColor}>
                   {item.text}
                 </Typography>
               </Box>
