@@ -64,6 +64,7 @@ const Couple = () => {
   useEffect(() => {
     if (couple) {
       setData({
+        id: couple.id,
         name: couple.name,
         coverURL: couple.coverURL,
       });
@@ -157,7 +158,7 @@ const Couple = () => {
             </Box>
           </Box>
           <TextField
-            key={couple?.id}
+            key={data?.id}
             fullWidth
             variant="outlined"
             label="Name"

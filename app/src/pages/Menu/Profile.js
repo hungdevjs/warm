@@ -76,6 +76,7 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setData({
+        id: user.id,
         email: user.email,
         username: user.username,
         gender: user.gender,
@@ -170,7 +171,7 @@ const Profile = () => {
             </Box>
           </Box>
           <TextField
-            key={couple?.id}
+            key={data?.id}
             fullWidth
             variant="outlined"
             label="Email"
@@ -178,7 +179,7 @@ const Profile = () => {
             disabled
           />
           <TextField
-            key={couple?.id}
+            key={data?.id}
             fullWidth
             variant="outlined"
             label="Username"
