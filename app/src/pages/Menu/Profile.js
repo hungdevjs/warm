@@ -63,8 +63,6 @@ const Profile = () => {
         data.avatarURL = url;
       }
 
-      console.log({ data });
-
       await updateUser(data);
       enqueueSnackbar('Updated profile', { variant: 'success' });
       navigate('/menu');

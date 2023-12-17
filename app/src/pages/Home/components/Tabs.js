@@ -17,7 +17,7 @@ const Tabs = () => {
 
   return (
     <Box p={2} bgcolor="#fff" display="flex" alignItems="center" gap={2}>
-      <Box
+      {/* <Box
         py={0.5}
         px={2}
         border="1px solid lightgrey"
@@ -30,7 +30,7 @@ const Tabs = () => {
           {formatter.format(couple?.balance)}
         </Typography>
         <img src="/icons/gold.png" alt="gold" width={24} />
-      </Box>
+      </Box> */}
       {tabs.map((tab) => (
         <Box
           key={tab.text}

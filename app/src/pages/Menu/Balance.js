@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack';
 
 import Main from './components/Main';
 import useCoupleStore from '../../stores/couple.store';
-import { formatter } from '../../utils/numbers';
 
 const Balance = () => {
   const navigate = useNavigate();
