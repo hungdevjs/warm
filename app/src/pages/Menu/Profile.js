@@ -86,8 +86,6 @@ const Profile = () => {
     }
   }, [user]);
 
-  console.log({ data });
-
   return (
     <Main>
       <FileInput

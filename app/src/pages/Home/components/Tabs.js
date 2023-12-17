@@ -1,18 +1,14 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 import useCoupleStore from '../../../stores/couple.store';
+import { formatter } from '../../../utils/numbers';
 
 const tabs = [
   { text: 'Timeline', path: '/home/timeline' },
   { text: 'Notes', path: '/home/notes' },
   { text: 'Todos', path: '/home/todos' },
 ];
-
-export const formatter = Intl.NumberFormat('en', {
-  notation: 'compact',
-  maximumFractionDigits: 3,
-});
 
 const Tabs = () => {
   const navigate = useNavigate();
