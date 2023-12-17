@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, IconButton, alpha } from '@mui/material';
+import MaleRoundedIcon from '@mui/icons-material/MaleRounded';
+import FemaleRoundedIcon from '@mui/icons-material/FemaleRounded';
 import ImageIcon from '@mui/icons-material/Image';
 import moment from 'moment';
 import { useSnackbar } from 'notistack';
@@ -49,6 +51,8 @@ const Timeline = () => {
             height="100%"
             bgcolor={alpha('#000', 0.3)}
             display="flex"
+            flexDirection="column"
+            gap={2}
             alignItems="center"
             justifyContent="center"
           >
@@ -70,6 +74,28 @@ const Timeline = () => {
                 {moment().diff(moment(couple.startDate.toDate()), 'days') + 1}{' '}
                 days together
               </Typography>
+            </Box>
+            <Box display="flex" alignItems="center" gap={2}>
+              {Object.values(couple.users).map((user) => (
+                <Box
+                  key={user.id}
+                  position="relative"
+                  width={60}
+                  borderRadius="50%"
+                  overflow="hidden"
+                  sx={{
+                    aspectRatio: '1/1',
+                    '& img': {
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center',
+                    },
+                  }}
+                >
+                  <img src={user.avatarURL} alt="avatar" />
+                </Box>
+              ))}
             </Box>
           </Box>
         </Box>
