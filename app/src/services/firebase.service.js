@@ -1,4 +1,4 @@
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithPopup, signOut, GoogleAuthProvider } from 'firebase/auth';
 import {
   query,
   getDocs,
@@ -11,10 +11,16 @@ import {
   increment,
   serverTimestamp,
 } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { httpsCallable } from 'firebase/functions';
 import validator from 'validator';
 
-import { auth, firestore, functions } from '../configs/firebase.config';
+import {
+  auth,
+  firestore,
+  storage,
+  functions,
+} from '../configs/firebase.config';
 import useCoupleStore from '../stores/couple.store';
 
 const provider = new GoogleAuthProvider();
@@ -31,6 +37,8 @@ const checkAuth = () => {
 };
 
 export const signInWithGoogle = () => signInWithPopup(auth, provider);
+
+export const logOut = () => signOut(auth);
 
 export const searchUser = async (search) => {
   const isEmail = validator.isEmail(search);
@@ -207,5 +215,34 @@ export const createMessage = async (data) => {
     file: null,
     creatorId: uid,
     createdAt: serverTimestamp(),
+  });
+};
+
+export const uploadFile = async (data) => {
+  const { storagePath, file } = data;
+  const fileRef = ref(storage, storagePath);
+  await uploadBytes(fileRef, file, { contentType: file.type });
+  const url = await getDownloadURL(fileRef);
+  return { storagePath, url };
+};
+
+export const updateUser = async (data) => {
+  const { uid } = checkAuth();
+  const { username, gender, avatarURL } = data;
+  if (!username || !username.trim()) throw new Error('Invalid username');
+
+  const collectionRef = collection(firestore, 'users');
+  const q = query(collectionRef, where('username', '==', username));
+  const existedSnapshot = await getDocs(q);
+  if (existedSnapshot.size > 1) throw new Error('Username existed');
+  if (existedSnapshot.size === 1) {
+    if (existedSnapshot.docs[0].id !== uid) throw new Error('Username existed');
+  }
+
+  const docRef = doc(firestore, 'users', uid);
+  await updateDoc(docRef, {
+    username,
+    gender,
+    avatarURL,
   });
 };

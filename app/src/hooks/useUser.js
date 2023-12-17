@@ -14,7 +14,12 @@ const useUser = (authInitialized, uid) => {
       if (uid) {
         unsubscribe = onSnapshot(doc(firestore, 'users', uid), (snapshot) => {
           if (snapshot.exists()) {
-            setUser({ id: snapshot.id, ...snapshot.data() });
+            setUser({
+              id: snapshot.id,
+              ...snapshot.data(),
+              avatarURL:
+                snapshot.data().avatarURL || '/images/default-avatar.jpeg',
+            });
           } else {
             setUser(null);
           }

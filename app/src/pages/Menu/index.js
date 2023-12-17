@@ -1,43 +1,38 @@
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid, Button } from '@mui/material';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import useUserStore from '../../stores/user.store';
 import useCoupleStore from '../../stores/couple.store';
+import { logOut } from '../../services/firebase.service';
 
 const items = [
   {
     text: 'Balance',
     icon: '/icons/gold.png',
-    path: '/menus/balance',
+    path: '/menu/balance',
     color: '#2ecc71',
     textColor: 'white',
   },
   {
     text: 'Pricing plan',
     icon: '/icons/pricing-plan.png',
-    path: '/menus/pricing-plan',
+    path: '/menu/pricing-plan',
     color: '#f39c12',
     textColor: 'white',
   },
   {
     text: 'Storage',
     icon: '/icons/storage.png',
-    path: '/menus/storage',
+    path: '/menu/storage',
     color: '#16a085',
     textColor: 'white',
   },
   {
     text: 'Settings',
     icon: '/icons/settings.png',
-    path: '/menus/settings',
+    path: '/menu/settings',
     color: '#34495e',
-    textColor: 'white',
-  },
-  {
-    text: 'Games',
-    icon: '/icons/game.png',
-    path: '/games',
-    color: '#e74c3c',
     textColor: 'white',
   },
 ];
@@ -56,7 +51,7 @@ const Menu = () => {
         display="flex"
         alignItems="center"
         gap={2}
-        onClick={() => navigate('/menus/profile')}
+        onClick={() => navigate('/menu/profile')}
       >
         <Box
           width="60px"
@@ -86,14 +81,14 @@ const Menu = () => {
         display="flex"
         alignItems="center"
         gap={2}
-        onClick={() => navigate('/menus/couple')}
+        onClick={() => navigate('/menu/couple')}
       >
         <img src="/icons/hearts.png" alt="heart" width={60} />
         <Typography fontWeight={600} color="white" align="center">
           {couple?.name}
         </Typography>
       </Box>
-      <Box>
+      <Box flex={1}>
         <Grid container spacing={2}>
           {items.map((item) => (
             <Grid item xs={6}>
@@ -114,6 +109,30 @@ const Menu = () => {
             </Grid>
           ))}
         </Grid>
+      </Box>
+      <Box>
+        <Button
+          fullWidth
+          variant="contained"
+          color="error"
+          startIcon={<LogoutRoundedIcon />}
+          sx={{
+            height: 60,
+            boxShadow: 'none',
+            bgcolor: '#fe415b',
+            '&:active': {
+              boxShadow: 'none',
+              bgcolor: '#fe415b',
+            },
+            '&:hover': {
+              boxShadow: 'none',
+              bgcolor: '#fe415b',
+            },
+          }}
+          onClick={logOut}
+        >
+          Logout
+        </Button>
       </Box>
     </Box>
   );

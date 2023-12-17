@@ -41,7 +41,7 @@ const BottomNavs = () => {
           bgcolor={isActive(nav.path) ? alpha('#fff', 0.1) : 'transparent'}
           sx={{ cursor: 'pointer' }}
           onClick={() => {
-            if (!isActive(nav.path)) {
+            if (nav.path !== pathname) {
               navigate(nav.path);
             }
           }}
