@@ -35,7 +35,13 @@ const useCouple = () => {
                 result[item.id] = { id: item.id, ...item.data() };
                 return result;
               }, {});
-              setCouple({ id: snapshot.id, ...snapshot.data(), users });
+              setCouple({
+                id: snapshot.id,
+                ...snapshot.data(),
+                users,
+                coverURL:
+                  snapshot.data().coverURL || '/images/default-cover.jpeg',
+              });
             } else {
               setCouple(null);
             }

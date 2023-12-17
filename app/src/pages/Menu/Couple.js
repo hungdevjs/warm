@@ -1,16 +1,6 @@
 import { useState, useEffect, useId, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Box,
-  TextField,
-  FormControl,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Button,
-  Typography,
-} from '@mui/material';
+import { Box, TextField, Button, Typography } from '@mui/material';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import UploadRoundedIcon from '@mui/icons-material/UploadRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
@@ -18,16 +8,14 @@ import { useSnackbar } from 'notistack';
 
 import Main from './components/Main';
 import FileInput from '../../components/FileInput';
-import useUserStore from '../../stores/user.store';
 import useCoupleStore from '../../stores/couple.store';
-import { uploadFile, updateUser } from '../../services/firebase.service';
+import { uploadFile, updateCouple } from '../../services/firebase.service';
 
 const MAX_FILE_SIZE = 5242880;
 
-const Profile = () => {
+const Couple = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const user = useUserStore((state) => state.user);
   const couple = useCoupleStore((state) => state.couple);
   const [data, setData] = useState(null);
   const [file, setFile] = useState(null);
@@ -45,28 +33,26 @@ const Profile = () => {
     setFile(file);
   };
 
-  const avatarURL = useMemo(() => {
+  const coverURL = useMemo(() => {
     if (file) return URL.createObjectURL(file);
-    return data?.avatarURL || '/images/default-avatar.jpeg';
+    return data?.coverURL || '/images/default-cover.jpeg';
   }, [data, file]);
 
   const update = async () => {
-    if (loading || !data || !data?.username || !data?.username.trim()) return;
+    if (loading || !data || !data?.name || !data?.name.trim()) return;
     setLoading(true);
 
     try {
       if (file) {
         const { url } = await uploadFile({
-          storagePath: `/couples/${couple.id}/${user.id}/avatar`,
+          storagePath: `/couples/${couple.id}/cover`,
           file,
         });
-        data.avatarURL = url;
+        data.coverURL = url;
       }
 
-      console.log({ data });
-
-      await updateUser(data);
-      enqueueSnackbar('Updated profile', { variant: 'success' });
+      await updateCouple(data);
+      enqueueSnackbar('Updated couple', { variant: 'success' });
       navigate('/menu');
     } catch (err) {
       enqueueSnackbar(err.message, { variant: 'error' });
@@ -76,17 +62,13 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (couple) {
       setData({
-        email: user.email,
-        username: user.username,
-        gender: user.gender,
-        avatarURL: user.avatarURL,
+        name: couple.name,
+        coverURL: couple.coverURL,
       });
     }
-  }, [user]);
-
-  console.log({ data });
+  }, [couple]);
 
   return (
     <Main>
@@ -106,14 +88,13 @@ const Profile = () => {
       >
         <Box flex={1} py={1} display="flex" flexDirection="column" gap={2}>
           <Box>
-            <Typography color="#0009">Avatar</Typography>
-            <Box display="flex" gap={2}>
+            <Typography color="#0009">Cover</Typography>
+            <Box display="flex" flexDirection="column" gap={2}>
               <Box
                 borderRadius={2}
                 overflow="hidden"
-                width="200px"
                 sx={{
-                  aspectRatio: '1/1',
+                  aspectRatio: '2/1',
                   '& img': {
                     width: '100%',
                     height: '100%',
@@ -122,14 +103,15 @@ const Profile = () => {
                   },
                 }}
               >
-                <img src={avatarURL} alt="avatar" />
+                <img src={coverURL} alt="avatar" />
               </Box>
-              <Box display="flex" flexDirection="column" gap={1}>
+              <Box display="flex" gap={1}>
                 <Button
                   variant="contained"
                   color="success"
                   startIcon={<UploadRoundedIcon />}
                   sx={{
+                    flex: 1,
                     boxShadow: 'none',
                     bgcolor: '#2ecc71',
                     '&:active': {
@@ -151,6 +133,7 @@ const Profile = () => {
                   color="error"
                   startIcon={<DeleteRoundedIcon />}
                   sx={{
+                    flex: 1,
                     boxShadow: 'none',
                     bgcolor: '#fe415b',
                     '&:active': {
@@ -177,43 +160,11 @@ const Profile = () => {
             key={couple?.id}
             fullWidth
             variant="outlined"
-            label="Email"
-            value={data?.email}
-            disabled
-          />
-          <TextField
-            key={couple?.id}
-            fullWidth
-            variant="outlined"
-            label="Username"
-            value={data?.username}
-            onChange={(e) => updateData({ username: e.target.value })}
+            label="Name"
+            value={data?.name}
+            onChange={(e) => updateData({ name: e.target.value })}
             disabled={loading}
           />
-          <Box>
-            <FormControl>
-              <FormLabel id="demo-controlled-radio-buttons-group">
-                Gender
-              </FormLabel>
-              <RadioGroup
-                key={data?.gender}
-                row
-                value={data?.gender}
-                onChange={(e) => updateData({ gender: e.target.value })}
-              >
-                <FormControlLabel
-                  value="female"
-                  control={<Radio />}
-                  label="Female"
-                />
-                <FormControlLabel
-                  value="male"
-                  control={<Radio />}
-                  label="Male"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
         </Box>
         <Box>
           <Button
@@ -234,9 +185,7 @@ const Profile = () => {
                 bgcolor: '#2ecc71',
               },
             }}
-            disabled={
-              loading || !data || !data.username || !data.username.trim()
-            }
+            disabled={loading || !data || !data.name || !data.name.trim()}
             onClick={update}
           >
             Save changes
@@ -247,4 +196,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default Couple;

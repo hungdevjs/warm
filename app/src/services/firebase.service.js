@@ -246,3 +246,15 @@ export const updateUser = async (data) => {
     avatarURL,
   });
 };
+
+export const updateCouple = async (data) => {
+  const { coupleId } = checkAuth();
+  const { name, coverURL } = data;
+  if (!name || !name.trim()) throw new Error('Invalid name');
+
+  const docRef = doc(firestore, 'couples', coupleId);
+  await updateDoc(docRef, {
+    name,
+    coverURL,
+  });
+};
