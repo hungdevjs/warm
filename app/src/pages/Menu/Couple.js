@@ -95,7 +95,7 @@ const Couple = () => {
                 borderRadius={2}
                 overflow="hidden"
                 sx={{
-                  aspectRatio: '2/1',
+                  aspectRatio: '5/2',
                   '& img': {
                     width: '100%',
                     height: '100%',

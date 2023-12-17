@@ -75,7 +75,7 @@ const Timeline = () => {
                 days together
               </Typography>
             </Box>
-            <Box display="flex" alignItems="center" gap={2}>
+            {/* <Box display="flex" alignItems="center" gap={2}>
               {Object.values(couple.users).map((user) => (
                 <Box
                   key={user.id}
@@ -96,7 +96,7 @@ const Timeline = () => {
                   <img src={user.avatarURL} alt="avatar" />
                 </Box>
               ))}
-            </Box>
+            </Box> */}
           </Box>
         </Box>
         <Box bgcolor="#fff" p={2} display="flex" alignItems="center" gap={2}>
