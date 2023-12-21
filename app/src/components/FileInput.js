@@ -1,6 +1,6 @@
 import { forwardRef } from 'react';
 
-const FileInput = ({ inputId, onChange, accept }, ref) => {
+const FileInput = ({ inputId, onChange, accept, ...rest }, ref) => {
   return (
     <>
       <label htmlFor={inputId} ref={ref} style={{ display: 'none' }} />
@@ -9,6 +9,7 @@ const FileInput = ({ inputId, onChange, accept }, ref) => {
         style={{ display: 'none' }}
         type="file"
         accept={accept}
+        {...rest}
         onChange={onChange}
       />
     </>

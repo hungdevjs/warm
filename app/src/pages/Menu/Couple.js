@@ -32,9 +32,13 @@ const Couple = () => {
   };
 
   const onFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file.size > MAX_FILE_SIZE) throw new Error('Max file size is 5MB');
-    setFile(file);
+    try {
+      const file = e.target.files[0];
+      if (file.size > MAX_FILE_SIZE) throw new Error('Max file size is 5MB');
+      setFile(file);
+    } catch (err) {
+      enqueueSnackbar(err.message, { variant: 'error' });
+    }
   };
 
   const coverURL = useMemo(() => {

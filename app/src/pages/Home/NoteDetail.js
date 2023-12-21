@@ -32,7 +32,7 @@ const NoteDetail = () => {
   const [content, setContent] = useState('');
   const [color, setColor] = useState(colors[0]);
   const [textColor, setTextColor] = useState(textColors[0]);
-  const [imageURLs, setImageURLs] = useState([]);
+  const [images, setImages] = useState([]);
 
   const canEdit = !id || note?.creatorId === user.id;
 
@@ -42,7 +42,7 @@ const NoteDetail = () => {
       setContent(note.content.replaceAll('<br />', '\n'));
       setColor(note.color);
       setTextColor(note.textColor);
-      setImageURLs(note.imageURLs);
+      setImages(note.images);
     }
   }, [note]);
 
@@ -57,7 +57,7 @@ const NoteDetail = () => {
         id: note?.id,
         title,
         content: content.replaceAll('\n', '<br />'),
-        imageURLs,
+        images,
         color,
         textColor,
       };

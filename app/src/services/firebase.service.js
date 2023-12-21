@@ -67,13 +67,13 @@ export const declineProposal = (data) =>
 export const createNewPost = async (data) => {
   const { uid, coupleId } = checkAuth();
 
-  const { text, imageURLs, isPinned } = data;
+  const { text, images, isPinned } = data;
   if (!text || !text.trim()) throw new Error('Invalid text');
 
   const collectionRef = collection(firestore, 'couples', coupleId, 'posts');
   await addDoc(collectionRef, {
     text,
-    imageURLs,
+    images,
     isPinned: !!isPinned,
     numberOfComments: 0,
     creatorId: uid,
@@ -126,7 +126,7 @@ export const togglePinnedStatus = async (data) => {
 export const createNewNote = async (data) => {
   const { uid, coupleId } = checkAuth();
 
-  const { title, content, color, textColor, imageURLs } = data;
+  const { title, content, color, textColor, images } = data;
   if (!title || !title.trim()) throw new Error('Invalid title');
   if (!content || !content.trim()) throw new Error('Invalid content');
 
@@ -134,7 +134,7 @@ export const createNewNote = async (data) => {
   await addDoc(collectionRef, {
     title,
     content,
-    imageURLs,
+    images,
     color,
     textColor,
     creatorId: uid,
@@ -145,7 +145,7 @@ export const createNewNote = async (data) => {
 export const updateNote = async (data) => {
   const { coupleId } = checkAuth();
 
-  const { id, title, content, color, textColor, imageURLs } = data;
+  const { id, title, content, color, textColor, images } = data;
   if (!title || !title.trim()) throw new Error('Invalid title');
   if (!content || !content.trim()) throw new Error('Invalid content');
 
@@ -153,7 +153,7 @@ export const updateNote = async (data) => {
   await updateDoc(noteRef, {
     title,
     content,
-    imageURLs,
+    images,
     color,
     textColor,
   });

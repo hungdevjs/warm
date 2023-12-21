@@ -63,6 +63,20 @@ const PostItem = ({ post, togglePinned }) => {
           </IconButton>
         ) : null}
       </Box>
+      {!!post.images?.length && (
+        <Box display="flex" flexDirection="column" gap={1}>
+          {post.images.map((item) => (
+            <Box
+              key={item.storagePath}
+              borderRadius={2}
+              overflow="hidden"
+              sx={{ '& img': { display: 'block', width: '100%' } }}
+            >
+              <img src={item.url} alt="post-img" />
+            </Box>
+          ))}
+        </Box>
+      )}
       <Box onClick={() => navigate(`/home/posts/${post.id}`)}>
         {parse(post.text)}
       </Box>
