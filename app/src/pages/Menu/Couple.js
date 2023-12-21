@@ -5,6 +5,10 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import UploadRoundedIcon from '@mui/icons-material/UploadRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import { useSnackbar } from 'notistack';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 
 import Main from './components/Main';
 import FileInput from '../../components/FileInput';
@@ -51,6 +55,8 @@ const Couple = () => {
         data.coverURL = url;
       }
 
+      data.startDate = data.startDate.toDate().getTime();
+
       await updateCouple(data);
       enqueueSnackbar('Updated couple', { variant: 'success' });
       navigate('/menu');
@@ -67,6 +73,7 @@ const Couple = () => {
         id: couple.id,
         name: couple.name,
         coverURL: couple.coverURL,
+        startDate: dayjs(couple.startDate.toDate()),
       });
     }
   }, [couple]);
@@ -88,6 +95,45 @@ const Couple = () => {
         gap={2}
       >
         <Box flex={1} py={1} display="flex" flexDirection="column" gap={2}>
+          {couple && (
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              gap={2}
+            >
+              {Object.values(couple.users).map((user) => (
+                <Box
+                  key={user.id}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  gap={0.5}
+                >
+                  <Box
+                    width="80px"
+                    borderRadius="50%"
+                    overflow="hidden"
+                    sx={{
+                      aspectRatio: '1/1',
+                      '& img': {
+                        display: 'block',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center',
+                      },
+                    }}
+                  >
+                    <img src={user.avatarURL} alt="avatar" />
+                  </Box>
+                  <Typography fontWeight={500} align="center">
+                    {user.username}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          )}
           <Box>
             <Typography color="#0009">Cover</Typography>
             <Box display="flex" flexDirection="column" gap={2}>
@@ -166,6 +212,15 @@ const Couple = () => {
             onChange={(e) => updateData({ name: e.target.value })}
             disabled={loading}
           />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Start date"
+              format="DD/MM/YYYY"
+              disabled={loading}
+              value={data?.startDate}
+              onChange={(newValue) => updateData({ startDate: newValue })}
+            />
+          </LocalizationProvider>
         </Box>
         <Box>
           <Button

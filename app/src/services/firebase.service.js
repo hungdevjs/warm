@@ -10,6 +10,7 @@ import {
   deleteDoc,
   increment,
   serverTimestamp,
+  Timestamp,
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { httpsCallable } from 'firebase/functions';
@@ -249,12 +250,13 @@ export const updateUser = async (data) => {
 
 export const updateCouple = async (data) => {
   const { coupleId } = checkAuth();
-  const { name, coverURL } = data;
+  const { name, coverURL, startDate } = data;
   if (!name || !name.trim()) throw new Error('Invalid name');
 
   const docRef = doc(firestore, 'couples', coupleId);
   await updateDoc(docRef, {
     name,
     coverURL,
+    startDate: Timestamp.fromMillis(startDate),
   });
 };
