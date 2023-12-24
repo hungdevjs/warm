@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
+import { getMessaging } from 'firebase/messaging';
 import { getFunctions, connectFunctionsEmulator } from 'firebase/functions';
 
 import environments from '../utils/environments';
@@ -23,6 +24,7 @@ export default firebaseApp;
 export const auth = getAuth(firebaseApp);
 export const firestore = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
+export const messaging = getMessaging(firebaseApp);
 export const functions = getFunctions(firebaseApp);
 
 // connectFunctionsEmulator(functions, 'localhost', 5001);

@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-const useMessage = create((set, get) => ({
+const useMessageStore = create((set, get) => ({
   messages: [],
   setMessages: (newMessages) => set((state) => ({ messages: newMessages })),
 }));
 
-export default useMessage;
+export default useMessageStore;

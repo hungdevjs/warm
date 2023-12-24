@@ -11,6 +11,7 @@ import {
   increment,
   serverTimestamp,
   Timestamp,
+  arrayUnion,
 } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { httpsCallable } from 'firebase/functions';
@@ -22,7 +23,9 @@ import {
   storage,
   functions,
 } from '../configs/firebase.config';
+import useUserStore from '../stores/user.store';
 import useCoupleStore from '../stores/couple.store';
+import { NotificationTypes } from '../utils/notifications';
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: 'select_account' });
@@ -64,6 +67,36 @@ export const acceptProposal = (data) =>
 export const declineProposal = (data) =>
   httpsCallable(functions, 'declineProposal')(data);
 
+export const getPartner = async () => {
+  const userId = auth.currentUser?.uid;
+  const couple = useCoupleStore.getState().couple;
+  const partnerId = Object.keys(couple.users).find((id) => id !== userId);
+  const partner = couple.users[partnerId];
+  return partner;
+};
+
+export const createNotification = async (data) => {
+  const { userId, text, metadata } = data;
+  const coupleId = useCoupleStore.getState().couple.id;
+
+  const collectionRef = collection(firestore, 'notifications');
+
+  await addDoc(collectionRef, {
+    userId,
+    coupleId,
+    text,
+    metadata,
+    isRead: false,
+    createdAt: serverTimestamp(),
+  });
+};
+
+export const readNotification = async (data) => {
+  const { id } = data;
+  const notificationRef = doc(firestore, 'notifications', id);
+  await updateDoc(notificationRef, { isRead: true });
+};
+
 export const createNewPost = async (data) => {
   const { uid, coupleId } = checkAuth();
 
@@ -71,13 +104,24 @@ export const createNewPost = async (data) => {
   if (!text || !text.trim()) throw new Error('Invalid text');
 
   const collectionRef = collection(firestore, 'couples', coupleId, 'posts');
-  await addDoc(collectionRef, {
+  const newPost = await addDoc(collectionRef, {
     text,
     images,
     isPinned: !!isPinned,
     numberOfComments: 0,
     creatorId: uid,
     createdAt: serverTimestamp(),
+  });
+
+  const partner = await getPartner();
+  const user = useUserStore.getState().user;
+  await createNotification({
+    userId: partner.id,
+    text: `${user.username} created a post`,
+    metadata: {
+      type: NotificationTypes.CreateNewPost,
+      postId: newPost.id,
+    },
   });
 };
 
@@ -113,6 +157,17 @@ export const createComment = async (data) => {
 
   const postRef = doc(firestore, 'couples', coupleId, 'posts', postId);
   await updateDoc(postRef, { numberOfComments: increment(1) });
+
+  const partner = await getPartner();
+  const user = useUserStore.getState().user;
+  await createNotification({
+    userId: partner.id,
+    text: `${user.username} commented on a post`,
+    metadata: {
+      type: NotificationTypes.NewPostComment,
+      postId,
+    },
+  });
 };
 
 export const togglePinnedStatus = async (data) => {
@@ -131,7 +186,7 @@ export const createNewNote = async (data) => {
   if (!content || !content.trim()) throw new Error('Invalid content');
 
   const collectionRef = collection(firestore, 'couples', coupleId, 'notes');
-  await addDoc(collectionRef, {
+  const newNote = await addDoc(collectionRef, {
     title,
     content,
     images,
@@ -139,6 +194,17 @@ export const createNewNote = async (data) => {
     textColor,
     creatorId: uid,
     createdAt: serverTimestamp(),
+  });
+
+  const partner = await getPartner();
+  const user = useUserStore.getState().user;
+  await createNotification({
+    userId: partner.id,
+    text: `${user.username} created a note`,
+    metadata: {
+      type: NotificationTypes.CreateNewPost,
+      noteId: newNote.id,
+    },
   });
 };
 
@@ -176,11 +242,22 @@ export const createTodo = async (data) => {
   if (!items || !items.length) throw new Error('Invalid items');
 
   const collectionRef = collection(firestore, 'couples', coupleId, 'todos');
-  await addDoc(collectionRef, {
+  const newTodo = await addDoc(collectionRef, {
     title,
     items,
     creatorId: uid,
     createdAt: serverTimestamp(),
+  });
+
+  const partner = await getPartner();
+  const user = useUserStore.getState().user;
+  await createNotification({
+    userId: partner.id,
+    text: `${user.username} created a todo list`,
+    metadata: {
+      type: NotificationTypes.CreateNewTodo,
+      todoId: newTodo.id,
+    },
   });
 };
 
@@ -216,6 +293,16 @@ export const createMessage = async (data) => {
     file: null,
     creatorId: uid,
     createdAt: serverTimestamp(),
+  });
+
+  const partner = await getPartner();
+  const user = useUserStore.getState().user;
+  await createNotification({
+    userId: partner.id,
+    text: `${user.username} sent you a message`,
+    metadata: {
+      type: NotificationTypes.NewMessage,
+    },
   });
 };
 
@@ -258,5 +345,25 @@ export const updateCouple = async (data) => {
     name,
     coverURL,
     startDate: Timestamp.fromMillis(startDate),
+  });
+
+  const partner = await getPartner();
+  const user = useUserStore.getState().user;
+  await createNotification({
+    userId: partner.id,
+    text: `${user.username} updated couple profile`,
+    metadata: {
+      type: NotificationTypes.UpdateCouple,
+    },
+  });
+};
+
+export const addUserNotificationToken = async (data) => {
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error('Bad credential');
+  const { token } = data;
+  const userRef = doc(firestore, 'users', uid);
+  await updateDoc(userRef, {
+    notificationTokens: arrayUnion(token),
   });
 };

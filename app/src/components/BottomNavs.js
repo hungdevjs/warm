@@ -1,22 +1,33 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Box, Typography, alpha } from '@mui/material';
 
-const navs = [
-  { text: 'Games', path: '/games', icon: '/icons/game.png' },
-  { text: 'Chat', path: '/chat', icon: '/icons/message.png' },
-  { text: 'Home', path: '/home', icon: '/icons/home.png' },
-  {
-    text: 'Notifications',
-    path: '/notifications',
-    icon: '/icons/notification.png',
-  },
-  { text: 'Menu', path: '/menu', icon: '/icons/menu.png' },
-];
+import useNotificationStore from '../stores/notification.store';
 
 const BottomNavs = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const hasNewNotifications = useNotificationStore(
+    (state) => state.hasNewNotifications
+  );
+  const setHasNewNotifications = useNotificationStore(
+    (state) => state.setHasNewNotifications
+  );
+
   const isActive = (path) => path === pathname || pathname.includes(path);
+
+  const navs = [
+    { text: 'Games', path: '/games', icon: '/icons/game.png' },
+    { text: 'Chat', path: '/chat', icon: '/icons/message.png' },
+    { text: 'Home', path: '/home', icon: '/icons/home.png' },
+    {
+      text: 'Notifications',
+      path: '/notifications',
+      icon: '/icons/notification.png',
+      isNotice: hasNewNotifications,
+      onClick: () => setHasNewNotifications(false),
+    },
+    { text: 'Menu', path: '/menu', icon: '/icons/menu.png' },
+  ];
 
   return (
     <Box
@@ -29,6 +40,7 @@ const BottomNavs = () => {
       {navs.map((nav) => (
         <Box
           key={nav.text}
+          position="relative"
           width="20%"
           display="flex"
           flexDirection="column"
@@ -44,8 +56,21 @@ const BottomNavs = () => {
             if (nav.path !== pathname) {
               navigate(nav.path);
             }
+
+            nav.onClick?.();
           }}
         >
+          {nav.isNotice && (
+            <Box
+              position="absolute"
+              top="25%"
+              left="56%"
+              bgcolor="#e74c3c"
+              width="10px"
+              borderRadius="50%"
+              sx={{ aspectRatio: '1/1', transform: 'translate(-50%, -50%)' }}
+            />
+          )}
           <img src={nav.icon} alt="icon" width={24} />
           <Typography
             fontSize={10}
